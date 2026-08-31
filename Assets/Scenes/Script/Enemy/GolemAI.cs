@@ -3,65 +3,129 @@ using UnityEngine;
 public class GolemAI : MonoBehaviour
 {
     public Transform player;
+    public Transform pointA;
+    public Transform pointB;
 
     public float moveSpeed = 2.5f;
-    public float detectionRange = 10f;
-    public float attackRange = 2f;
+    public float detectionRange = 1.5f;
+    public float attackRange = 1f;
     public float attackCooldown = 2f;
 
+    public float waitTime = 2f;
+
     private Animator animator;
+    private Transform targetPoint;
     private float lastAttackTime;
+
+    private bool isWaiting = false;
+    private float waitTimer = 0f;
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        targetPoint = pointA;
     }
 
     void Update()
     {
         if (player == null)
         {
+            Patrol();
             return;
         }
 
-        float distance = Vector3.Distance(transform.position, player.position);
+        float distanceToPlayer =
+            Vector3.Distance(transform.position, player.position);
 
-        if (distance > detectionRange)
+        if (distanceToPlayer <= attackRange)
         {
-            animator.SetFloat("Speed", 0f);
+            AttackPlayer();
         }
-        else if (distance > attackRange)
+        else if (distanceToPlayer <= detectionRange)
         {
             ChasePlayer();
         }
         else
         {
-            AttackPlayer();
+            Patrol();
+        }
+    }
+
+    void Patrol()
+    {
+        if (isWaiting)
+        {
+            WaitAtPoint();
+            return;
+        }
+
+        animator.SetFloat("Speed", 1f);
+
+        transform.LookAt(targetPoint);
+
+        transform.position +=
+            transform.forward * moveSpeed * Time.deltaTime;
+
+        float distanceToPoint =
+            Vector3.Distance(transform.position, targetPoint.position);
+
+        if (distanceToPoint < 0.5f)
+        {
+            isWaiting = true;
+            waitTimer = 0f;
+        }
+    }
+
+    void WaitAtPoint()
+    {
+        animator.SetFloat("Speed", 0f);
+
+        waitTimer += Time.deltaTime;
+
+        if (waitTimer >= waitTime)
+        {
+            ChangeTarget();
+
+            isWaiting = false;
+        }
+    }
+
+    void ChangeTarget()
+    {
+        if (targetPoint == pointA)
+        {
+            targetPoint = pointB;
+        }
+        else
+        {
+            targetPoint = pointA;
         }
     }
 
     void ChasePlayer()
     {
+        isWaiting = false;
+
         animator.SetFloat("Speed", 1f);
 
-        Vector3 direction = player.position - transform.position;
-        direction.y = 0f;
+        transform.LookAt(player);
 
-        if (direction != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
-        }
-
-        transform.position += transform.forward * moveSpeed * Time.deltaTime;
+        transform.position +=
+            transform.forward * moveSpeed * Time.deltaTime;
     }
 
     void AttackPlayer()
     {
+        isWaiting = false;
+
         animator.SetFloat("Speed", 0f);
 
-        if (Time.time >= lastAttackTime + attackCooldown)
+        transform.LookAt(player);
+
+        if (Time.time > lastAttackTime + attackCooldown)
         {
             animator.SetTrigger("Attack");
+
             lastAttackTime = Time.time;
         }
     }
