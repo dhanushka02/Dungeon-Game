@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 internal static class DungeonHierarchyOrganizer
 {
+    private const string ScenePath = "Assets/Scenes/SampleScene.unity";
+
     private static readonly string[] GroupNames =
     {
         "00_SYSTEMS",
@@ -21,6 +23,12 @@ internal static class DungeonHierarchyOrganizer
     [MenuItem("Tools/Dungeon/Organize Current Scene Hierarchy")]
     private static void OrganizeFromMenu()
     {
+        OrganizeCurrentScene();
+    }
+
+    public static void OrganizeBatch()
+    {
+        EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
         OrganizeCurrentScene();
     }
 
@@ -48,16 +56,15 @@ internal static class DungeonHierarchyOrganizer
         };
 
         int moved = 0;
-        GameObject[] roots = scene.GetRootGameObjects();
-        foreach (GameObject root in roots)
+        List<GameObject> candidates = CollectCandidates(scene, groups, propGroups);
+        foreach (GameObject root in candidates)
         {
-            if (Array.IndexOf(GroupNames, root.name) >= 0)
-            {
-                continue;
-            }
-
             Transform destination = ResolveDestination(root.name, groups, propGroups);
+            Vector3 worldPosition = root.transform.position;
+            Quaternion worldRotation = root.transform.rotation;
+            Vector3 worldScale = root.transform.lossyScale;
             Undo.SetTransformParent(root.transform, destination, "Organize dungeon hierarchy");
+            VerifyWorldTransform(root.transform, worldPosition, worldRotation, worldScale);
             moved++;
         }
 
@@ -74,6 +81,62 @@ internal static class DungeonHierarchyOrganizer
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         Debug.Log($"Dungeon hierarchy organized: {moved} root objects grouped without changing world positions.");
+    }
+
+    private static List<GameObject> CollectCandidates(
+        Scene scene,
+        Dictionary<string, Transform> groups,
+        Dictionary<string, Transform> propGroups)
+    {
+        List<GameObject> candidates = new List<GameObject>();
+        foreach (GameObject root in scene.GetRootGameObjects())
+        {
+            if (Array.IndexOf(GroupNames, root.name) < 0)
+            {
+                candidates.Add(root);
+            }
+        }
+
+        foreach (KeyValuePair<string, Transform> group in groups)
+        {
+            if (group.Key == "04_PROPS")
+            {
+                continue;
+            }
+
+            foreach (Transform child in group.Value)
+            {
+                candidates.Add(child.gameObject);
+            }
+        }
+
+        foreach (Transform propGroup in propGroups.Values)
+        {
+            foreach (Transform child in propGroup)
+            {
+                candidates.Add(child.gameObject);
+            }
+        }
+
+        return candidates;
+    }
+
+    private static void VerifyWorldTransform(
+        Transform target,
+        Vector3 expectedPosition,
+        Quaternion expectedRotation,
+        Vector3 expectedScale)
+    {
+        const float tolerance = 0.0001f;
+        bool positionChanged = Vector3.Distance(target.position, expectedPosition) > tolerance;
+        bool rotationChanged = Quaternion.Angle(target.rotation, expectedRotation) > tolerance;
+        bool scaleChanged = Vector3.Distance(target.lossyScale, expectedScale) > tolerance;
+
+        if (positionChanged || rotationChanged || scaleChanged)
+        {
+            throw new InvalidOperationException(
+                $"Hierarchy organization changed the world transform of {target.name}. Scene was not saved.");
+        }
     }
 
     private static Dictionary<string, Transform> CreateGroups(Scene scene)
@@ -123,7 +186,7 @@ internal static class DungeonHierarchyOrganizer
             return groups["01_LIGHTING"];
         }
 
-        if (StartsWithAny(name, "dungeon_room", "Dungeon", "Basement Passage", "Balcony", "FloorTIle", "Stairs_Platform", "Steps_Small", "Door_Wooden", "Fireplace"))
+        if (StartsWithAny(name, "dungeon_room", "Dungeon", "Basement Passage", "Starting Room", "HoleFix", "Balcony", "FloorTIle", "Stairs_Platform", "Steps_Small", "Door_Wooden", "Fireplace"))
         {
             return groups["02_ARCHITECTURE"];
         }
