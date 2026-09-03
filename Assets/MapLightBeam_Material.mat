@@ -70,18 +70,18 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
-    - _EdgePower: 2.8
+    - _EdgePower: 3.27
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 0
-    - _Intensity: 0.9
+    - _Intensity: 0.83
     - _Metallic: 0
     - _Mode: 3
     - _NoiseScale: 1.7
     - _NoiseSpeed: 0.18
     - _NoiseStrength: 0.32
     - _OcclusionStrength: 1
-    - _Opacity: 0.12
+    - _Opacity: 0.07
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 0
