@@ -13,6 +13,9 @@ public class MapPickup : MonoBehaviour
     [Header("Progression")]
     [SerializeField] private DoorController doorToOpen;
 
+    [SerializeField] private GameObject rockBlockage;
+    [SerializeField] private float rockfallDelay = 1.5f;
+
     private TMP_Text pickupPromptText;
     private bool playerInRange;
     private bool mapCollected;
@@ -29,6 +32,9 @@ public class MapPickup : MonoBehaviour
 
         if (objectiveText != null)
             objectiveText.gameObject.SetActive(false);
+
+        if (rockBlockage != null)
+            rockBlockage.SetActive(false);
     }
 
     private void Update()
@@ -103,7 +109,17 @@ public class MapPickup : MonoBehaviour
 
         Debug.Log("Map collected!");
 
+        StartCoroutine(ActivateRockBlockage());
+
         StartCoroutine(FinishPickup());
+    }
+
+    private IEnumerator ActivateRockBlockage()
+    {
+        yield return new WaitForSeconds(rockfallDelay);
+
+        if (rockBlockage != null)
+            rockBlockage.SetActive(true);
     }
 
     private IEnumerator FinishPickup()
