@@ -135,6 +135,7 @@ public class MapPickup : MonoBehaviour
         {
             objectiveText.text =
                 "OBJECTIVE\n" +
+                "The way back has collapsed.\n" +
                 "Search the nearby rooms for clues about your son.";
 
             objectiveText.gameObject.SetActive(true);
