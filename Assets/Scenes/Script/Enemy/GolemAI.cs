@@ -3,10 +3,10 @@ using UnityEngine;
 public class GolemAI : MonoBehaviour
 {
     public Transform player;
-    public Transform pointA;
-    public Transform pointB;
 
     public float moveSpeed = 2.5f;
+    public float patrolDistance = 5f;
+
     public float detectionRange = 1.5f;
     public float attackRange = 1f;
     public float attackCooldown = 2f;
@@ -14,7 +14,13 @@ public class GolemAI : MonoBehaviour
     public float waitTime = 2f;
 
     private Animator animator;
-    private Transform targetPoint;
+
+    private Vector3 startPosition;
+    private Vector3 endPosition;
+    private Vector3 patrolDirection;
+
+    private bool movingToEnd = true;
+
     private float lastAttackTime;
 
     private bool isWaiting = false;
@@ -23,7 +29,16 @@ public class GolemAI : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        targetPoint = pointA;
+
+        // Save this Golem's starting position
+        startPosition = transform.position;
+
+        // Save the direction the Golem is facing
+        patrolDirection = transform.forward;
+
+        // Calculate patrol end position
+        endPosition =
+            startPosition + patrolDirection * patrolDistance;
     }
 
     void Update()
@@ -61,15 +76,35 @@ public class GolemAI : MonoBehaviour
 
         animator.SetFloat("Speed", 1f);
 
-        transform.LookAt(targetPoint);
+        Vector3 targetPosition;
 
-        transform.position +=
-            transform.forward * moveSpeed * Time.deltaTime;
+        if (movingToEnd)
+        {
+            targetPosition = endPosition;
+        }
+        else
+        {
+            targetPosition = startPosition;
+        }
 
-        float distanceToPoint =
-            Vector3.Distance(transform.position, targetPoint.position);
+        // Look at patrol target
+        Vector3 direction = targetPosition - transform.position;
+        direction.y = 0f;
 
-        if (distanceToPoint < 0.5f)
+        if (direction != Vector3.zero)
+        {
+            transform.forward = direction.normalized;
+        }
+
+        // Move
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            targetPosition,
+            moveSpeed * Time.deltaTime
+        );
+
+        // Reached patrol point
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
             isWaiting = true;
             waitTimer = 0f;
@@ -84,21 +119,10 @@ public class GolemAI : MonoBehaviour
 
         if (waitTimer >= waitTime)
         {
-            ChangeTarget();
+            movingToEnd = !movingToEnd;
 
             isWaiting = false;
-        }
-    }
-
-    void ChangeTarget()
-    {
-        if (targetPoint == pointA)
-        {
-            targetPoint = pointB;
-        }
-        else
-        {
-            targetPoint = pointA;
+            waitTimer = 0f;
         }
     }
 
@@ -108,7 +132,13 @@ public class GolemAI : MonoBehaviour
 
         animator.SetFloat("Speed", 1f);
 
-        transform.LookAt(player);
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f;
+
+        if (direction != Vector3.zero)
+        {
+            transform.forward = direction.normalized;
+        }
 
         transform.position +=
             transform.forward * moveSpeed * Time.deltaTime;
@@ -120,7 +150,13 @@ public class GolemAI : MonoBehaviour
 
         animator.SetFloat("Speed", 0f);
 
-        transform.LookAt(player);
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f;
+
+        if (direction != Vector3.zero)
+        {
+            transform.forward = direction.normalized;
+        }
 
         if (Time.time > lastAttackTime + attackCooldown)
         {
