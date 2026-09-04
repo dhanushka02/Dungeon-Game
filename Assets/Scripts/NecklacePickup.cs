@@ -7,6 +7,7 @@ public class NecklacePickup : InteractablePickup
     [SerializeField] private GameObject necklaceVisual;
     [SerializeField] private GameObject magicEffect;
     [SerializeField] private GameObject nextObjective;
+    [SerializeField] private DoorController doorToOpen;
     [SerializeField] private float clueMessageDuration = 4f;
 
     protected override string InteractionMessage =>
@@ -23,6 +24,9 @@ public class NecklacePickup : InteractablePickup
     protected override void Collect()
     {
         CompleteCollection();
+
+        if (doorToOpen != null)
+            doorToOpen.OpenDoor();
 
         if (necklaceVisual != null)
             necklaceVisual.SetActive(false);
