@@ -1,23 +1,22 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GolemHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 100;
-    public Image healthFill;
+    public Slider healthBar;
+    public Animator animator;
+    public PlayerMovement playerMovement;
 
     private int currentHealth;
-    private Animator animator;
-    private GolemAI golemAI;
     private bool isDead = false;
 
     void Start()
     {
         currentHealth = maxHealth;
-        animator = GetComponent<Animator>();
-        golemAI = GetComponent<GolemAI>();
 
-        UpdateHealthBar();
+        healthBar.maxValue = maxHealth;
+        healthBar.value = currentHealth;
     }
 
     public void TakeDamage(int damage)
@@ -34,26 +33,15 @@ public class GolemHealth : MonoBehaviour
             currentHealth = 0;
         }
 
-        UpdateHealthBar();
+        healthBar.value = currentHealth;
 
-        Debug.Log("Golem Health: " + currentHealth);
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-        else
+        if (currentHealth > 0)
         {
             animator.SetTrigger("Hit");
         }
-    }
-
-    void UpdateHealthBar()
-    {
-        if (healthFill != null)
+        else
         {
-            healthFill.fillAmount =
-                (float)currentHealth / maxHealth;
+            Die();
         }
     }
 
@@ -62,12 +50,10 @@ public class GolemHealth : MonoBehaviour
         isDead = true;
 
         animator.SetFloat("Speed", 0f);
+        animator.SetBool("Running", false);
         animator.SetTrigger("Death");
 
-        if (golemAI != null)
-        {
-            golemAI.enabled = false;
-        }
+        playerMovement.enabled = false;
     }
 
     public bool IsDead()
