@@ -7,10 +7,13 @@ public class GolemAI : MonoBehaviour
     public float moveSpeed = 2.5f;
     public float patrolDistance = 5f;
 
-    public float detectionRange = 3f;
+    public float detectionRange = 5f;
     public float attackRange = 1.5f;
+
+    public int attackDamage = 20;
     public float attackCooldown = 2f;
     public float attackDuration = 1f;
+    public float damageDelay = 0.5f;
 
     public float waitTime = 2f;
 
@@ -167,17 +170,33 @@ public class GolemAI : MonoBehaviour
 
             animator.SetTrigger("Attack");
 
-            PlayerHealth playerHealth =
-                player.GetComponent<PlayerHealth>();
-
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(20);
-            }
+            Invoke("DealDamage", damageDelay);
+            Invoke("FinishAttack", attackDuration);
 
             lastAttackTime = Time.time;
+        }
+    }
 
-            Invoke("FinishAttack", attackDuration);
+    void DealDamage()
+    {
+        if (player == null)
+        {
+            return;
+        }
+
+        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+
+        if (playerHealth == null || playerHealth.IsDead())
+        {
+            return;
+        }
+
+        float distance =
+            Vector3.Distance(transform.position, player.position);
+
+        if (distance <= attackRange)
+        {
+            playerHealth.TakeDamage(attackDamage);
         }
     }
 
