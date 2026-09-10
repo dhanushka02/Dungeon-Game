@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Main Menu.unity
+    path: Assets/Scenes/Main MenuByMinh.unity
     guid: 71cecc44a35005b4492a062eb37259a2
   - enabled: 1
     path: Assets/Scenes/Starting Room By An.unity
@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/BigRoomByDan.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Scenes/Hallway.unity
+    path: Assets/Scenes/HallwayByMinh.unity
     guid: a88ed3c59b898144f829bf919c267c4d
   - enabled: 1
     path: Assets/Scenes/Room_Near_Donut.unity
