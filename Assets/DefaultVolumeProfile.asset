@@ -552,6 +552,7 @@ MonoBehaviour:
   - {fileID: -733649486251685491}
   - {fileID: -7083136704887001129}
   - {fileID: 1100878557583819120}
+  - {fileID: 7453851329348117112}
 --- !u!114 &483431897000263945
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -842,6 +843,73 @@ MonoBehaviour:
   maxNits:
     m_OverrideState: 1
     m_Value: 1000
+--- !u!114 &7453851329348117112
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d5c2b8a4c6d8a41a7144150fe7db2d, type: 3}
+  m_Name: VolumetricFogVolumeComponent
+  m_EditorClassIdentifier: Assembly-CSharp::VolumetricFogVolumeComponent
+  active: 1
+  distance:
+    m_OverrideState: 1
+    m_Value: 64
+  baseHeight:
+    m_OverrideState: 1
+    m_Value: 0
+  maximumHeight:
+    m_OverrideState: 1
+    m_Value: 50
+  enableGround:
+    m_OverrideState: 1
+    m_Value: 0
+  groundHeight:
+    m_OverrideState: 1
+    m_Value: 0
+  density:
+    m_OverrideState: 1
+    m_Value: 0.2
+  attenuationDistance:
+    m_OverrideState: 1
+    m_Value: 128
+  enableAPVContribution:
+    m_OverrideState: 1
+    m_Value: 0
+  APVContributionWeight:
+    m_OverrideState: 1
+    m_Value: 1
+  enableMainLightContribution:
+    m_OverrideState: 1
+    m_Value: 0
+  anisotropy:
+    m_OverrideState: 1
+    m_Value: 0.4
+  scattering:
+    m_OverrideState: 1
+    m_Value: 0.15
+  tint:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  enableAdditionalLightsContribution:
+    m_OverrideState: 1
+    m_Value: 0
+  maxSteps:
+    m_OverrideState: 1
+    m_Value: 128
+  blurIterations:
+    m_OverrideState: 1
+    m_Value: 2
+  enabled:
+    m_OverrideState: 1
+    m_Value: 0
+  renderPassEvent:
+    m_OverrideState: 1
+    m_Value: 550
 --- !u!114 &7781740694067343709
 MonoBehaviour:
   m_ObjectHideFlags: 3
