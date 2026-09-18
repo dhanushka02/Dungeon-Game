@@ -5,22 +5,22 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Main MenuByMinh.unity
     guid: 71cecc44a35005b4492a062eb37259a2
   - enabled: 1
     path: Assets/Scenes/Starting Room By An.unity
     guid: 0ff31c4d0eaaeae48936fc661933d52d
   - enabled: 1
-    path: Assets/Scenes/BigRoomByDanAlongWithHiddenRoombyDino.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
     path: Assets/Scenes/HallwayByMinh.unity
     guid: a88ed3c59b898144f829bf919c267c4d
   - enabled: 1
+    path: Assets/Scenes/BigRoomByDanAlongWithHiddenRoombyDino.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 0
     path: Assets/Scenes/Room_Near_Donut.unity
     guid: 0e39f4d140a2d084386ae4af880f3160
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Donut.unity
     guid: e3dee38415a3a2a4fb8d74ac4a8b73f6
   - enabled: 1
