@@ -13,13 +13,36 @@ public class PlayerMovement : MonoBehaviour
 
     private float verticalVelocity;
 
-    private int combo = 0;
-    private float lastAttackTime = 0f;
+    private float x;
+    private float z;
+
+    private bool isMoving;
+    private bool isRunning;
+    private bool isJumping;
+    private bool isAttacking;
+    private bool isHit;
+    private bool isDead;
+
+    private int attackCombo = 0;
+
+    private string currentAnimation = "";
 
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        if (isDead)
+        {
+            return;
+        }
+
+        MovePlayer();
+        CheckAttack();
+        CheckAnimation();
+    }
+
+    void MovePlayer()
+    {
+        x = Input.GetAxis("Horizontal");
+        z = Input.GetAxis("Vertical");
 
         Vector3 forward = cameraTransform.forward;
         Vector3 right = cameraTransform.right;
@@ -33,16 +56,25 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = forward * z + right * x;
         move = move.normalized;
 
-        bool running = Input.GetKey(KeyCode.LeftShift);
+        isMoving = move != Vector3.zero;
+
+        isRunning =
+            Input.GetKey(KeyCode.LeftShift) &&
+            isMoving;
 
         float currentSpeed = normalSpeed;
 
-        if (running)
+        if (isRunning)
         {
             currentSpeed = sprintSpeed;
         }
 
-        if (move != Vector3.zero)
+        if (isAttacking || isHit)
+        {
+            currentSpeed = 0f;
+        }
+
+        if (move != Vector3.zero && !isAttacking && !isHit)
         {
             transform.forward = move;
         }
@@ -50,26 +82,22 @@ public class PlayerMovement : MonoBehaviour
         if (controller.isGrounded && verticalVelocity < 0)
         {
             verticalVelocity = -2f;
+            isJumping = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) &&
+            controller.isGrounded &&
+            !isAttacking &&
+            !isHit)
         {
-            verticalVelocity = Mathf.Sqrt(
-                jumpHeight * -2f * gravity
-            );
+            verticalVelocity =
+                Mathf.Sqrt(jumpHeight * -2f * gravity);
 
-            animator.SetTrigger("Jump");
-        }
+            isJumping = true;
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            Attack();
-        }
+            ChangeAnimation("Jump");
 
-        if (Time.time - lastAttackTime > 1.5f)
-        {
-            combo = 0;
-            animator.SetInteger("Combo", 0);
+            Invoke("JumpUp", 0.2f);
         }
 
         verticalVelocity += gravity * Time.deltaTime;
@@ -78,33 +106,162 @@ public class PlayerMovement : MonoBehaviour
         movement.y = verticalVelocity;
 
         controller.Move(movement * Time.deltaTime);
-
-        animator.SetFloat("Speed", move.magnitude);
-        animator.SetBool("Running", running);
-        animator.SetFloat("YVelocity", verticalVelocity);
     }
 
-    void Attack()
+    void CheckAttack()
     {
-        if (Time.time - lastAttackTime > 1.5f)
+        if (Input.GetMouseButtonDown(0) &&
+            !isAttacking &&
+            !isHit &&
+            !isJumping)
         {
-            combo = 0;
+            attackCombo++;
+
+            if (attackCombo > 3)
+            {
+                attackCombo = 1;
+            }
+
+            isAttacking = true;
+
+            if (attackCombo == 1)
+            {
+                ChangeAnimation("attack1");
+            }
+            else if (attackCombo == 2)
+            {
+                ChangeAnimation("attack2");
+            }
+            else if (attackCombo == 3)
+            {
+                ChangeAnimation("attack3");
+            }
+
+            Invoke("FinishAttack", 0.8f);
+        }
+    }
+
+    void CheckAnimation()
+    {
+        if (isDead)
+        {
+            return;
         }
 
-        combo++;
-
-        if (combo > 3)
+        if (isHit)
         {
-            combo = 1;
+            return;
         }
 
-        animator.SetInteger("Combo", combo);
-
-        if (combo == 1)
+        if (isAttacking)
         {
-            animator.SetTrigger("Attack");
+            return;
         }
 
-        lastAttackTime = Time.time;
+        if (isJumping)
+        {
+            if (verticalVelocity < 0f)
+            {
+                ChangeAnimation("Jump_Down");
+            }
+
+            return;
+        }
+
+        if (isRunning)
+        {
+            ChangeAnimation("Sprint");
+            return;
+        }
+
+        if (z > 0.1f)
+        {
+            ChangeAnimation("RunForward");
+            return;
+        }
+
+        if (x < -0.1f)
+        {
+            ChangeAnimation("RunLeft");
+            return;
+        }
+
+        if (x > 0.1f)
+        {
+            ChangeAnimation("RunRight");
+            return;
+        }
+
+        if (z < -0.1f)
+        {
+            ChangeAnimation("RunForward");
+            return;
+        }
+
+        ChangeAnimation("Idle");
+    }
+
+    void ChangeAnimation(string animationName)
+    {
+        if (currentAnimation == animationName)
+        {
+            return;
+        }
+
+        animator.CrossFade(animationName, 0.15f);
+
+        currentAnimation = animationName;
+    }
+
+    void JumpUp()
+    {
+        if (isJumping && !isDead)
+        {
+            ChangeAnimation("Jump_Up");
+        }
+    }
+
+    void FinishAttack()
+    {
+        isAttacking = false;
+    }
+
+    public void PlayHit()
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        isHit = true;
+
+        int randomHit = Random.Range(1, 3);
+
+        if (randomHit == 1)
+        {
+            ChangeAnimation("behit1");
+        }
+        else
+        {
+            ChangeAnimation("behit2");
+        }
+
+        Invoke("FinishHit", 0.6f);
+    }
+
+    void FinishHit()
+    {
+        isHit = false;
+    }
+
+    public void PlayDeath()
+    {
+        isDead = true;
+        isAttacking = false;
+        isHit = false;
+        isMoving = false;
+        isRunning = false;
+
+        ChangeAnimation("Death");
     }
 }
