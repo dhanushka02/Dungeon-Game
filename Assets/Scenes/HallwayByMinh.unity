@@ -2228,7 +2228,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c281f56a75c691c43974a786b2c1c036, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 496867473}
   m_SourcePrefab: {fileID: 100100000, guid: c281f56a75c691c43974a786b2c1c036, type: 3}
 --- !u!4 &189720086 stripped
 Transform:
@@ -5884,6 +5887,33 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20dc69066f16acc48b952aed5b788376, type: 3}
+--- !u!1 &496867470 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c281f56a75c691c43974a786b2c1c036, type: 3}
+  m_PrefabInstance: {fileID: 189720085}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &496867473
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496867470}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -446648176690607450, guid: c281f56a75c691c43974a786b2c1c036, type: 3}
 --- !u!1001 &502677033
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6205,7 +6235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b75dadb5fcbe8434e96181bd69989843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door1
-  interactionDistance: 3
+  interactionDistance: 5
   player: {fileID: 0}
   promptText: {fileID: 375143666}
 --- !u!1001 &511139697
@@ -20984,7 +21014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b75dadb5fcbe8434e96181bd69989843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door1
-  interactionDistance: 3
+  interactionDistance: 5
   player: {fileID: 0}
   promptText: {fileID: 375143666}
 --- !u!1001 &1623198617
