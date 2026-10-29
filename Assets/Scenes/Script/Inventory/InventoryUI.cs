@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class InventoryUI : MonoBehaviour
 {
     public GameObject inventoryPanel;
+    public GameObject equipmentHUD;
     public Transform slotContainer;
     public GameObject slotPrefab;
 
@@ -29,10 +30,19 @@ public class InventoryUI : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            inventoryPanel.SetActive(!inventoryPanel.activeSelf);
+            bool isOpen = !inventoryPanel.activeSelf;
 
-            if (inventoryPanel.activeSelf)
+            inventoryPanel.SetActive(isOpen);
+
+            if (equipmentHUD != null)
+            {
+                equipmentHUD.SetActive(!isOpen);
+            }
+
+            if (isOpen)
+            {
                 RefreshInventory();
+            }
         }
     }
 

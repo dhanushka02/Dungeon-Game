@@ -6,6 +6,9 @@ public class ItemPickup : MonoBehaviour
     public ItemData item;
     public float pickupRange = 2f;
 
+    private static ItemPickup closestItem;
+    private static float closestDistance;
+
     private Transform player;
 
     private void Start()
@@ -21,14 +24,37 @@ public class ItemPickup : MonoBehaviour
         if (player == null || InventoryManager.Instance == null)
             return;
 
-        float distance = Vector3.Distance(transform.position, player.position);
-
-        if (distance <= pickupRange && Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            bool added = InventoryManager.Instance.AddItem(item);
+            ItemPickup[] pickups = FindObjectsByType<ItemPickup>(FindObjectsSortMode.None);
 
-            if (added)
-                Destroy(gameObject);
+            closestItem = null;
+            closestDistance = Mathf.Infinity;
+
+            foreach (ItemPickup pickup in pickups)
+            {
+                if (pickup.player == null || pickup.item == null)
+                    continue;
+
+                float distance = Vector3.Distance(
+                    pickup.transform.position,
+                    pickup.player.position
+                );
+
+                if (distance <= pickup.pickupRange && distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestItem = pickup;
+                }
+            }
+
+            if (closestItem == this)
+            {
+                bool added = InventoryManager.Instance.AddItem(item);
+
+                if (added)
+                    Destroy(gameObject);
+            }
         }
     }
 }
