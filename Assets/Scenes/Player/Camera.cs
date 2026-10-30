@@ -13,7 +13,7 @@ public class Cam : MonoBehaviour
 
     public static Cam sigleton;
 
-    public float lookSpeed = 0.1f;
+    public float lookSpeed = 0.5f;
     public float followSpeed = 0.1f;
     public float pivotSpeed = 0.3f;
 
@@ -31,7 +31,7 @@ public class Cam : MonoBehaviour
         sigleton = this;
         Ptransform = transform;
         defaultPosition =  camera.localPosition.z;
-        // ignoreLayers = ~(1<<8 | 1<< 9 | 1<<10);
+        ignoreLayers = ~(1<<8 | 1<< 9 | 1<<10);
     }
 
     private void LateUpdate()

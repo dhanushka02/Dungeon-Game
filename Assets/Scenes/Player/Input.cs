@@ -12,6 +12,7 @@ namespace Test2
         public float MouseX;
         public float MouseY;
         public bool Jump;
+        public bool Interact;
         PlayerMovement Action;
         Cam cameraHandler;
         Vector2 MovementInput;
@@ -40,7 +41,9 @@ namespace Test2
                 Action.Player.Look.performed += i => CameraInput = i.ReadValue<Vector2>();
                 Action.Player.Look.canceled += i => CameraInput = Vector2.zero;
                 Action.Player.Jump.performed += ctx => Jump = true;
-                Action.Player.Jump.canceled += ctx => Jump = false;            
+                Action.Player.Jump.canceled += ctx => Jump = false;           
+                Action.Player.Interact.performed += ctx => Interact = true;
+                Action.Player.Interact.canceled += ctx => Interact = false; 
             }
             Action.Enable();
         }
@@ -62,6 +65,7 @@ namespace Test2
             MouseX = CameraInput.x;
             MouseY = CameraInput.y;
         }
+
 
 
     }

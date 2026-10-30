@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 923459779aa375642bd5fb8bc0f9474b, type: 3}
+  m_Script: {fileID: 11500000, guid: 838c82a7a35d1ee47bbdaa326dd39a9b, type: 3}
   m_Name: Goblin
   m_EditorClassIdentifier: Assembly-CSharp::NPC.EnemiesStatus
-  maxHealth: 0
-  moveSpeed: 0
-  patrolDistance: 0
-  detectionRange: 0
-  attackRange: 0
-  attackDamage: 0
-  attackCooldown: 0
-  attackDuration: 0
-  damageDelay: 0
-  waitTime: 0
+  maxHealth: 100
+  moveSpeed: 10
+  patrolDistance: 20
+  detectionRange: 10
+  attackRange: 5
+  attackDamage: 1
+  attackCooldown: 3
+  attackDuration: 1
+  damageDelay: 1
+  waitTime: 10
