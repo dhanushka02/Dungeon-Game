@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Test2;
+
+namespace Test2
+{
 public class Locomotion : MonoBehaviour
 {
     Transform CameraObject;
@@ -22,7 +24,7 @@ public class Locomotion : MonoBehaviour
     [SerializeField] float groundCheckDistance = 0.2f;
     [SerializeField] LayerMask groundLayer;
 
-    private bool isGrounded;    
+    private bool isGrounded;
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -31,7 +33,7 @@ public class Locomotion : MonoBehaviour
         CameraObject = Camera.main.transform;
         myTransform = transform;
         animatorHandler.Initialize();
-    }   
+    }
     #region  Movement
     Vector3 normalVector;
     Vector3 targetPosition;
@@ -54,7 +56,7 @@ public class Locomotion : MonoBehaviour
 
         myTransform.rotation = targetRotation;
     }
-        private void CheckGround()
+    private void CheckGround()
     {
         isGrounded = Physics.Raycast(
             transform.position + Vector3.up * 0.1f,
@@ -82,8 +84,9 @@ public class Locomotion : MonoBehaviour
         inputHandler.TickInput(delta);
         MoveDirection = CameraObject.forward * inputHandler.vertical;
         MoveDirection += CameraObject.right * inputHandler.horizontal;
+        MoveDirection.y = 0f;
+
         MoveDirection.Normalize();
-        MoveDirection.y = 0;
         CheckGround();
         HandleJump();
         animatorHandler.SetJumping(!isGrounded);
@@ -99,7 +102,17 @@ public class Locomotion : MonoBehaviour
         {
             HandleRotation(delta);
         }
-        
+
     }
     #endregion
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(
+            "Player collided with: " +
+            collision.gameObject.name +
+            " | Layer: " +
+            LayerMask.LayerToName(collision.gameObject.layer)
+        );
+    }
+}
 }

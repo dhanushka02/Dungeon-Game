@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Test2;
 //Check Take Dmg - Is Hit and Is death missing
 
+namespace Test2
+{
 public class PlayerHealth: MonoBehaviour
 {
     public int healthLevel = 10;
@@ -32,4 +33,5 @@ public class PlayerHealth: MonoBehaviour
         if (currentHP == 0)
         return true; else return false;
     }
+}
 }

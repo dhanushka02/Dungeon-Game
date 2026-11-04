@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace Invent
+{
 public class Inventory : MonoBehaviour
 {
     [Header("Inventory Settings")]
@@ -129,4 +131,5 @@ public class Inventory : MonoBehaviour
             }
         }
     }
+}
 }

@@ -1,6 +1,8 @@
 using UnityEngine;
-using Test2;
 using Unity.Mathematics;
+
+namespace Test2
+{
 public class Animation : MonoBehaviour
 {
     public Animator anim;
@@ -77,4 +79,5 @@ public class Animation : MonoBehaviour
     {
         canRotate = false;
     }
+}
 }

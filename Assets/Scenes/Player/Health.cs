@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Test2;
 
+namespace Test2
+{
 public class HealthBar : MonoBehaviour
 {
     public Slider slider;
@@ -18,5 +19,5 @@ public class HealthBar : MonoBehaviour
         slider.value = CHP;
 
     }
-
+}
 }

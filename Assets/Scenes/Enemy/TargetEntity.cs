@@ -1,5 +1,6 @@
 using UnityEngine;
 using NPC;
+using Test2;
 
 namespace NPC
 {

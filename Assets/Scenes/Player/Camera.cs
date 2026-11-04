@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Test2;
 
+namespace Test2
+{
 public class Cam : MonoBehaviour
 {
     public Transform target;
@@ -62,4 +63,5 @@ public class Cam : MonoBehaviour
         targetRotation = Quaternion.Euler(rotation);
         pivot.localRotation = targetRotation;
     }
+}
 }

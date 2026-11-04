@@ -1,52 +1,54 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-public class ItemPickup : MonoBehaviour
+namespace Invent
 {
-    [SerializeField] private ItemData item;
-    [SerializeField] private int amount = 1;
-
-    private Inventory playerInventory;
-
-    private void OnTriggerEnter(Collider other)
+    public class ItemPickup : MonoBehaviour
     {
-        Inventory inventory = other.GetComponent<Inventory>();
+        [SerializeField] private ItemData item;
+        [SerializeField] private int amount = 1;
 
-        if (inventory == null)
-            return;
+        private Inventory playerInventory;
 
-        playerInventory = inventory;
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        Inventory inventory = other.GetComponent<Inventory>();
-
-        if (inventory == playerInventory)
+        private void OnTriggerEnter(Collider other)
         {
-            playerInventory = null;
+            Inventory inventory = other.GetComponent<Inventory>();
+
+            if (inventory == null)
+                return;
+
+            playerInventory = inventory;
         }
-    }
 
-    private void Update()
-    {
-        if (playerInventory == null)
-            return;
-
-        if (Keyboard.current != null &&
-            Keyboard.current.eKey.wasPressedThisFrame)
+        private void OnTriggerExit(Collider other)
         {
-            PickUpItem();
+            Inventory inventory = other.GetComponent<Inventory>();
+
+            if (inventory == playerInventory)
+            {
+                playerInventory = null;
+            }
         }
-    }
 
-    private void PickUpItem()
-    {
-        bool added = playerInventory.AddItem(item, amount);
-
-        if (added)
+        private void Update()
         {
-            Destroy(gameObject);
+            if (playerInventory == null)
+                return;
+
+            if (Keyboard.current != null &&
+                Keyboard.current.eKey.wasPressedThisFrame)
+            {
+                PickUpItem();
+            }
+        }
+
+        private void PickUpItem()
+        {
+            bool added = playerInventory.AddItem(item, amount);
+
+            if (added)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

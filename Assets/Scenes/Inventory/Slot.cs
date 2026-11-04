@@ -1,3 +1,6 @@
+
+namespace Invent
+{
 [System.Serializable]
 public class InventorySlot
 {
@@ -20,4 +23,5 @@ public class InventorySlot
         item = null;
         quantity = 0;
     }
+}
 }

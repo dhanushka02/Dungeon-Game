@@ -1,5 +1,7 @@
 using UnityEngine;
 
+namespace Invent
+{
 public enum ItemType
 {
     Consumable,
@@ -28,6 +30,11 @@ public class ItemData : ScriptableObject
 
     public bool stackable = true;
 
+    [Header("Usage")]
+    public bool canUse = false;
+    public int healAmount = 0;
+
     [Min(1)]
     public int maxStack = 10;
+}
 }

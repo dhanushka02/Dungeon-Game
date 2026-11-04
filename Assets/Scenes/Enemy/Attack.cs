@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using NPC;
+using Test2;
 namespace NPC
 {
     public class Attack:Status
