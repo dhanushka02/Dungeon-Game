@@ -48,6 +48,28 @@ public class UIEquip : MonoBehaviour
             potionIcon.sprite = healthPotion != null ? healthPotion.icon : null;
             potionIcon.enabled = quantity > 0 && healthPotion != null && healthPotion.icon != null;
         }
+        ItemData weapon = null;
+////
+        if (inventory != null)
+        {
+            foreach (InventorySlot slot in inventory.slots)
+            {
+                if (!slot.IsEmpty &&
+                    slot.item.itemType == ItemType.Weapon)
+                {
+                    weapon = slot.item;
+                    break;
+                }
+            }
+        }
+
+        if (weaponIcon != null)
+        {
+            weaponIcon.sprite = weapon != null ? weapon.icon : null;
+
+            weaponIcon.enabled =
+                weapon != null && weapon.icon != null;
+        }
     }
 
     private void OnDestroy()
@@ -55,5 +77,6 @@ public class UIEquip : MonoBehaviour
         if (inventory != null)
             inventory.OnInventoryChanged -= RefreshHUD;
     }
+    
 }
 }

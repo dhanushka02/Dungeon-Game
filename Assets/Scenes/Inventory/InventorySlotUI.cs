@@ -14,6 +14,15 @@ public class InventorySlotUI : MonoBehaviour
     private int currentSlotIndex;
     private UIBag inventoryUI;
 
+    public void SetItem(ItemData item)
+    {
+        if (itemIcon != null)
+        {
+            itemIcon.sprite = item != null ? item.icon : null;
+            itemIcon.enabled = item != null && item.icon != null;
+        }
+    }
+
     public void Setup(InventorySlot slot, int slotIndex, UIBag ui)
     {
         currentSlot = slot;
@@ -25,11 +34,12 @@ public class InventorySlotUI : MonoBehaviour
 
         if (slot == null || slot.IsEmpty)
         {
-            if (itemIcon != null)
-            {
-                itemIcon.sprite = null;
-                itemIcon.enabled = false;
-            }
+            // if (itemIcon != null)
+            // {
+            //     itemIcon.sprite = null;
+            //     itemIcon.enabled = false;
+            // }
+            SetItem(null);
 
             if (quantityText != null)
                 quantityText.text = "";
@@ -37,11 +47,12 @@ public class InventorySlotUI : MonoBehaviour
             return;
         }
 
-        if (itemIcon != null)
-        {
-            itemIcon.sprite = slot.item.icon;
-            itemIcon.enabled = slot.item.icon != null;
-        }
+        // if (itemIcon != null)
+        // {
+        //     itemIcon.sprite = slot.item.icon;
+        //     itemIcon.enabled = slot.item.icon != null;
+        // }
+        SetItem(slot.item);
 
         if (quantityText != null)
         {

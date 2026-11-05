@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 212cfc1a189ef884b8d5b1087b47c0b1, type: 3}
-  m_Name: Sword
+  m_Script: {fileID: 11500000, guid: 2a57dda269985ad429eaceb95bf2bae2, type: 3}
+  m_Name: HealthPotion
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 001
-  itemName: LongSword
-  description: Basic Test
-  icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
-  itemType: 1
-  stackable: 0
-  maxStack: 1
+  itemName: Health Potion
+  icon: {fileID: 21300000, guid: 3532e2fbad5ffdd4d97b861221ad8637, type: 3}
+  description: Restores 30 HP
+  canStack: 1
+  canUse: 1
+  healAmount: 30

@@ -17,19 +17,34 @@ namespace Test2
         Cam cameraHandler;
         Vector2 MovementInput;
         Vector2 CameraInput;
-
-        private void Awake()
+        // private void Awake()
+        // {
+        //     cameraHandler = Cam.sigleton;
+        // }
+        // private void FixedUpdate()
+        // {
+        //     float delta = Time.fixedDeltaTime;
+        //     if (cameraHandler != null)
+        //     {
+        //         cameraHandler.FollowTarget(delta);
+        //         cameraHandler.HanldeCameraRotation(delta, MouseX, MouseY);
+        //     }
+        // }
+        private void Start()
         {
             cameraHandler = Cam.sigleton;
         }
-        private void FixedUpdate()
+
+        private void LateUpdate()
         {
-            float delta = Time.fixedDeltaTime;
-            if (cameraHandler != null)
-            {
-                cameraHandler.FollowTarget(delta);
-                cameraHandler.HanldeCameraRotation(delta, MouseX, MouseY);
-            }
+            if (cameraHandler == null)
+                return;
+
+            cameraHandler.HanldeCameraRotation(
+                Time.deltaTime,
+                MouseX,
+                MouseY
+            );
         }
         public void OnEnable()
         {

@@ -48,8 +48,10 @@ public class Cam : MonoBehaviour
 
     public void HanldeCameraRotation(float delta, float MouseXI, float MouseYI)
     {
-        LookAngle += (MouseXI * lookSpeed) / delta;
-        pivotAngle -= (MouseYI * lookSpeed)/ delta;
+        // LookAngle += (MouseXI * lookSpeed) / delta;
+        // pivotAngle -= (MouseYI * lookSpeed)/ delta;
+        LookAngle += MouseXI * lookSpeed;
+        pivotAngle -= MouseYI * pivotSpeed;
         pivotAngle =  Mathf.Clamp(pivotAngle, minimumPivot, maximumPivot);
 
         Vector3 rotation =  Vector3.zero;

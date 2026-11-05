@@ -6,6 +6,7 @@ namespace Test2
 public class Locomotion : MonoBehaviour
 {
     Transform CameraObject;
+    [SerializeField] private Transform cameraReference;
     InputHandler inputHandler;
     Vector3 MoveDirection;
     [HideInInspector]
@@ -30,9 +31,17 @@ public class Locomotion : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         inputHandler = GetComponent<InputHandler>();
         animatorHandler = GetComponent<Animation>();
-        CameraObject = Camera.main.transform;
+        // CameraObject = Camera.main.transform;
         myTransform = transform;
         animatorHandler.Initialize();
+        CameraObject = cameraReference;
+
+        if (CameraObject == null)
+        {
+            Debug.LogError("Locomotion: Camera Reference Not Setup!");
+            enabled = false;
+            return;
+        }
     }
     #region  Movement
     Vector3 normalVector;
@@ -82,11 +91,21 @@ public class Locomotion : MonoBehaviour
     {
         float delta = Time.deltaTime;
         inputHandler.TickInput(delta);
-        MoveDirection = CameraObject.forward * inputHandler.vertical;
-        MoveDirection += CameraObject.right * inputHandler.horizontal;
-        MoveDirection.y = 0f;
 
-        MoveDirection.Normalize();
+        Vector3 cameraForward = CameraObject.forward;
+        Vector3 cameraRight = CameraObject.right;
+
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+
+        cameraForward.Normalize();
+        cameraRight.Normalize();
+
+        MoveDirection = cameraForward * inputHandler.vertical;
+        MoveDirection += cameraRight * inputHandler.horizontal;
+
+        MoveDirection = Vector3.ClampMagnitude(MoveDirection, 1f);
+
         CheckGround();
         HandleJump();
         animatorHandler.SetJumping(!isGrounded);
@@ -94,25 +113,31 @@ public class Locomotion : MonoBehaviour
         float speed = movementSpeed;
         MoveDirection *= speed;
 
-        Vector3 projectVelocity = Vector3.ProjectOnPlane(MoveDirection, normalVector);
-        // rigidbody.linearVelocity = projectVelocity;
-        rigidbody.linearVelocity = new Vector3(projectVelocity.x,rigidbody.linearVelocity.y,projectVelocity.z);
+        Vector3 projectVelocity =
+            Vector3.ProjectOnPlane(MoveDirection, normalVector);
+
+        rigidbody.linearVelocity = new Vector3(
+            projectVelocity.x,
+            rigidbody.linearVelocity.y,
+            projectVelocity.z
+        );
+
         animatorHandler.UpdateAnimValue(inputHandler.moveAmount, 0);
+
         if (animatorHandler.canRotate)
         {
             HandleRotation(delta);
         }
-
     }
-    #endregion
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log(
-            "Player collided with: " +
-            collision.gameObject.name +
-            " | Layer: " +
-            LayerMask.LayerToName(collision.gameObject.layer)
-        );
-    }
+        #endregion
+        private void OnCollisionEnter(Collision collision)
+        {
+            Debug.Log(
+                "Player collided with: " +
+                collision.gameObject.name +
+                " | Layer: " +
+                LayerMask.LayerToName(collision.gameObject.layer)
+            );
+        }
 }
 }

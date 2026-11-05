@@ -5,19 +5,20 @@ using UnityEngine.UI;
 
 namespace Test2
 {
-public class HealthBar : MonoBehaviour
-{
-    public Slider slider;
-
-    public void MaxHealth (int MHP)
+    public class HealthBar : MonoBehaviour
     {
-        slider.value = MHP;
-        slider.maxValue = MHP;
-    }
-    public void CurrentHealth(int CHP)
-    {
-        slider.value = CHP;
+        public Slider slider;
+
+        public void MaxHealth (int MHP)
+        {
+            slider.maxValue = MHP;
+            slider.value = MHP;
+        }
+        public void CurrentHealth(int CHP)
+        {
+            slider.value = CHP;
+
+        }
 
     }
-}
 }

@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using Test2;
-
-public class DamagePlayer : MonoBehaviour
+namespace Damage
 {
-    public int dmg = 5;
-    private void OnTriggerEnter(Collider other)
+    public class Damage : MonoBehaviour
     {
-        PlayerHealth PlayerHealth = other.GetComponent<PlayerHealth>();
-        if (PlayerHealth != null)
+        public int dmg = 10;
+        private void OnCollisionEnter(Collision collision)
         {
-            PlayerHealth.TakeDamage(dmg);
+            Test2.PlayerHealth playerHealth =
+                collision.collider.GetComponentInParent<Test2.PlayerHealth>();
+
+            if (playerHealth != null && !playerHealth.IsDead())
+            {
+                playerHealth.TakeDamage(dmg);
+            }
         }
     }
 }

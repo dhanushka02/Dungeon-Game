@@ -19,11 +19,13 @@ public class ItemData : ScriptableObject
     [Header("Basic Information")]
     public string itemID;
     public string itemName;
-
+    
     [TextArea]
     public string description;
 
     public Sprite icon;
+    public GameObject worldPrefab;
+
 
     [Header("Item Settings")]
     public ItemType itemType;
