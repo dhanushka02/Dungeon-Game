@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using NPC;
 namespace Test2
 {
     public class InputHandler : MonoBehaviour
@@ -13,6 +14,10 @@ namespace Test2
         public float MouseY;
         public bool Jump;
         public bool Interact;
+
+        public bool Light;
+        public bool Heavy;
+
         PlayerMovement Action;
         Cam cameraHandler;
         Vector2 MovementInput;

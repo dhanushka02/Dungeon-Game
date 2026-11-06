@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class EquipmentHUD : MonoBehaviour
 {
-    public ItemData healthPotion;
+    public Invent.ItemData healthPotion;
 
     public Image potionIcon;
     public TMP_Text potionQuantity;
@@ -14,35 +14,52 @@ public class EquipmentHUD : MonoBehaviour
     public Image shieldIcon;
     public Image skillIcon;
 
+    [SerializeField] private Invent.Inventory inventory;
+    private Invent.Inventory subscribedInventory;
+
+    private void OnEnable()
+    {
+        BindInventory();
+        RefreshHUD();
+    }
+
     private void Start()
     {
-        if (InventoryManager.Instance != null)
-        {
-            InventoryManager.Instance.OnInventoryChanged += RefreshHUD;
-        }
-
+        BindInventory();
         RefreshHUD();
+    }
+
+    private void BindInventory()
+    {
+        if (inventory == null)
+            inventory = FindFirstObjectByType<Invent.Inventory>();
+
+        if (subscribedInventory == inventory)
+            return;
+
+        if (subscribedInventory != null)
+            subscribedInventory.OnInventoryChanged -= RefreshHUD;
+
+        subscribedInventory = inventory;
+        if (subscribedInventory != null)
+            subscribedInventory.OnInventoryChanged += RefreshHUD;
     }
 
     public void RefreshHUD()
     {
         int quantity = 0;
 
-        if (InventoryManager.Instance != null && healthPotion != null)
+        if (inventory != null && healthPotion != null)
         {
-            foreach (InventoryItem inventoryItem in InventoryManager.Instance.items)
+            foreach (Invent.InventorySlot slot in inventory.slots)
             {
-                if (inventoryItem.item == healthPotion)
-                {
-                    quantity += inventoryItem.quantity;
-                }
+                if (!slot.IsEmpty && slot.item == healthPotion)
+                    quantity += slot.quantity;
             }
         }
 
         if (potionQuantity != null)
-        {
             potionQuantity.text = quantity.ToString();
-        }
 
         if (potionIcon != null)
         {
@@ -51,11 +68,11 @@ public class EquipmentHUD : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        if (InventoryManager.Instance != null)
-        {
-            InventoryManager.Instance.OnInventoryChanged -= RefreshHUD;
-        }
+        if (subscribedInventory != null)
+            subscribedInventory.OnInventoryChanged -= RefreshHUD;
+
+        subscribedInventory = null;
     }
 }
