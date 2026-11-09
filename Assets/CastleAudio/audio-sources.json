@@ -1,0 +1,60 @@
+{
+  "AxeSwing": {
+    "sources": [
+      "Sword Attack 1.wav"
+    ],
+    "duration": 0.5,
+    "peak": 0.5
+  },
+  "WoodHit1": {
+    "sources": [
+      "chop 1.wav"
+    ],
+    "duration": 0.388,
+    "peak": 0.65
+  },
+  "WoodHit2": {
+    "sources": [
+      "chop 2.wav"
+    ],
+    "duration": 0.452,
+    "peak": 0.65
+  },
+  "WoodHit3": {
+    "sources": [
+      "chop 3.wav"
+    ],
+    "duration": 0.411,
+    "peak": 0.65
+  },
+  "BarrelBreak": {
+    "sources": [
+      "chop 4.wav",
+      "original synthesized timber thump and debris"
+    ],
+    "duration": 1.15,
+    "peak": 0.74
+  },
+  "WoodenWallBreak": {
+    "sources": [
+      "chop 4.wav",
+      "original synthesized timber thump and debris"
+    ],
+    "duration": 1.8,
+    "peak": 0.76
+  },
+  "SlidingGateOpen": {
+    "sources": [
+      "Portcullis Gate.wav"
+    ],
+    "duration": 4.0,
+    "peak": 0.65
+  },
+  "HingedGateOpen": {
+    "sources": [
+      "Gate Open.wav"
+    ],
+    "duration": 1.487,
+    "peak": 0.65
+  }
+}
