@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1915800894398461611}
   - component: {fileID: 957015721931761396}
-  - component: {fileID: 3376684471917646973}
   m_Layer: 0
   m_Name: InventorySystem
   m_TagString: Untagged
@@ -42,27 +41,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8000377362060720231}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c04eff9ade99e141a4901a4cf527fe3, type: 3}
+  m_Script: {fileID: 11500000, guid: 5cbb49f61853e004a9b3f0b660c9778e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InventoryManager
-  maxSlots: 20
-  items: []
---- !u!114 &3376684471917646973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8000377362060720231}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47051d14ad3a1674c9c69e51892f343a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InventoryUI
-  inventoryPanel: {fileID: 0}
-  equipmentHUD: {fileID: 0}
-  slotContainer: {fileID: 0}
-  slotPrefab: {fileID: 5761460133098666503, guid: 0395772266ef39040beff03224097739, type: 3}
-  itemNameText: {fileID: 0}
-  descriptionText: {fileID: 0}
-  useButton: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::Invent.Inventory
+  inventorySize: 20
+  slots: []

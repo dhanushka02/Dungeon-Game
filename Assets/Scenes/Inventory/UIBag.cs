@@ -27,6 +27,9 @@ public class UIBag : MonoBehaviour
 
     private void Start()
     {
+        if (inventory == null)
+            inventory = FindFirstObjectByType<Inventory>();
+
         if (inventoryPanel != null)
             inventoryPanel.SetActive(false);
 
@@ -36,6 +39,7 @@ public class UIBag : MonoBehaviour
         if (useButton != null)
             useButton.onClick.AddListener(UseSelectedItem);
 
+        ClearSelection();
         RefreshInventory();
     }
 
@@ -129,6 +133,9 @@ public class UIBag : MonoBehaviour
     {
         if (inventory != null)
             inventory.OnInventoryChanged -= RefreshInventory;
+
+        if (useButton != null)
+            useButton.onClick.RemoveListener(UseSelectedItem);
     }
 }
 }

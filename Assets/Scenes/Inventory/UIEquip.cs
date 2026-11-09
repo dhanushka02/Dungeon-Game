@@ -19,12 +19,34 @@ public class UIEquip : MonoBehaviour
     [SerializeField] private Image shieldIcon;
     [SerializeField] private Image skillIcon;
 
+    private Inventory subscribedInventory;
+
+    private void OnEnable()
+    {
+        BindInventory();
+        RefreshHUD();
+    }
+
     private void Start()
     {
-        if (inventory != null)
-            inventory.OnInventoryChanged += RefreshHUD;
-
+        BindInventory();
         RefreshHUD();
+    }
+
+    private void BindInventory()
+    {
+        if (inventory == null)
+            inventory = FindFirstObjectByType<Inventory>();
+
+        if (subscribedInventory == inventory)
+            return;
+
+        if (subscribedInventory != null)
+            subscribedInventory.OnInventoryChanged -= RefreshHUD;
+
+        subscribedInventory = inventory;
+        if (subscribedInventory != null)
+            subscribedInventory.OnInventoryChanged += RefreshHUD;
     }
 
     public void RefreshHUD()
@@ -72,10 +94,12 @@ public class UIEquip : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        if (inventory != null)
-            inventory.OnInventoryChanged -= RefreshHUD;
+        if (subscribedInventory != null)
+            subscribedInventory.OnInventoryChanged -= RefreshHUD;
+
+        subscribedInventory = null;
     }
     
 }

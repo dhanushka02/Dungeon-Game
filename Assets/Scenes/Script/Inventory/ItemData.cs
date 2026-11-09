@@ -1,7 +1,8 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/Item")]
+// Legacy item assets remain usable; create new items with Invent.ItemData.
+//[CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/Item")]
 public class ItemData : ScriptableObject
 {
     public string itemName;
