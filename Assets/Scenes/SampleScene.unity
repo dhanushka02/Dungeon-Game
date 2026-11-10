@@ -320,6 +320,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Animation
   anim: {fileID: 0}
   canRotate: 1
+--- !u!114 &126081116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126081098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808db82bdcb8e8946b83e9a9d5deb1a2, type: 3}
+  m_Name: ""
+  m_EditorClassIdentifier: Assembly-CSharp::Test2.Attack
+  inputHandler: {fileID: 126081109}
+  animationHandler: {fileID: 126081110}
 --- !u!4 &126081112 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6679017069556005625, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
@@ -1149,6 +1163,9 @@ PrefabInstance:
       addedObject: {fileID: 126081110}
     - targetCorrespondingSourceObject: {fileID: 6339786312913494083, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 126081116}
+    - targetCorrespondingSourceObject: {fileID: 6339786312913494083, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 126081114}
     - targetCorrespondingSourceObject: {fileID: 6339786312913494083, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
       insertIndex: -1
@@ -1519,13 +1536,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 427821788}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2bd253ab5cd128b46af14b6ed76264b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPC.Attack
-  player: {fileID: 0}
-  stat: {fileID: 0}
+  player: {fileID: 126081112}
+  stat: {fileID: 11400000, guid: 3eaff235caa8819428ded916afc23c17, type: 2}
 --- !u!114 &427821794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1549,13 +1566,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 427821788}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d56c398a344914389e452fce446a69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPC.Target
   player: {fileID: 126081112}
   stat: {fileID: 11400000, guid: 3eaff235caa8819428ded916afc23c17, type: 2}
+  attackHandler: {fileID: 427821793}
 --- !u!114 &427821796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3064,7 +3082,15 @@ PrefabInstance:
     - target: {fileID: 8621575989863660144, guid: f3f26804650d6ff4bbb724bb568ae6de, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: ae8b7d7031c62404f8c4693cd2f88008, type: 2}
+      objectReference: {fileID: 9100000, guid: be94599944fb18b4ea870787648aa418, type: 2}
+    - target: {fileID: 8621575989863660144, guid: f3f26804650d6ff4bbb724bb568ae6de, type: 3}
+      propertyPath: m_Avatar
+      value:
+      objectReference: {fileID: 0}
+    - target: {fileID: 3877589336059844179, guid: f3f26804650d6ff4bbb724bb568ae6de, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8621575989863660144, guid: f3f26804650d6ff4bbb724bb568ae6de, type: 3}
       propertyPath: m_AnimatePhysics
       value: 0

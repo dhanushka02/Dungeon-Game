@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 namespace Invent
@@ -8,6 +9,7 @@ namespace Invent
         [SerializeField] private int amount = 1;
 
         private Inventory playerInventory;
+        private bool pickupPending;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -31,7 +33,7 @@ namespace Invent
 
         private void Update()
         {
-            if (playerInventory == null)
+            if (pickupPending || playerInventory == null)
                 return;
 
             if (Keyboard.current != null &&
@@ -43,12 +45,31 @@ namespace Invent
 
         private void PickUpItem()
         {
+            Test2.Animation playerAnimation =
+                playerInventory.GetComponent<Test2.Animation>();
+            if (playerAnimation != null && !playerAnimation.CanStartAction)
+                return;
+
             bool added = playerInventory.AddItem(item, amount);
 
             if (added)
             {
+                pickupPending = true;
+
+                if (playerAnimation != null && playerAnimation.PlayPickup())
+                {
+                    StartCoroutine(DestroyAfterPickupAnimation(playerAnimation));
+                    return;
+                }
+
                 Destroy(gameObject);
             }
+        }
+
+        private IEnumerator DestroyAfterPickupAnimation(Test2.Animation playerAnimation)
+        {
+            yield return playerAnimation.WaitForPickupAnimation();
+            Destroy(gameObject);
         }
     }
 }

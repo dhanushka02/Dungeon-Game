@@ -62,6 +62,7 @@ namespace Test2
                 Action.Player.Look.canceled += i => CameraInput = Vector2.zero;
                 Action.Player.Jump.performed += ctx => Jump = true;
                 Action.Player.Jump.canceled += ctx => Jump = false;           
+                Action.Player.Attack.performed += ctx => Light = true;
                 Action.Player.Interact.performed += ctx => Interact = true;
                 Action.Player.Interact.canceled += ctx => Interact = false; 
             }
@@ -70,7 +71,21 @@ namespace Test2
 
         private void OnDisable()
         {
-            Action.Disable();
+            if (Action != null)
+                Action.Disable();
+
+            Jump = false;
+            Interact = false;
+            Light = false;
+        }
+
+        public bool ConsumeLightAttack()
+        {
+            if (!Light)
+                return false;
+
+            Light = false;
+            return true;
         }
 
         public void TickInput(float delta)
@@ -90,4 +105,3 @@ namespace Test2
 
     }
 }
-

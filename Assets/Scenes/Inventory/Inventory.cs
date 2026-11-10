@@ -12,6 +12,7 @@ public class Inventory : MonoBehaviour
     public List<InventorySlot> slots = new List<InventorySlot>();
 
     public event Action OnInventoryChanged;
+    public event Action<ItemData> OnItemAdded;
 
     private void Awake()
     {
@@ -54,6 +55,7 @@ public class Inventory : MonoBehaviour
                     if (remaining <= 0)
                     {
                         OnInventoryChanged?.Invoke();
+                        OnItemAdded?.Invoke(item);
                         return true;
                     }
                 }
@@ -81,9 +83,13 @@ public class Inventory : MonoBehaviour
             if (remaining <= 0)
             {
                 OnInventoryChanged?.Invoke();
+                OnItemAdded?.Invoke(item);
                 return true;
             }
         }
+
+        if (remaining < amount)
+            OnItemAdded?.Invoke(item);
 
         OnInventoryChanged?.Invoke();
 

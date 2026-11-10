@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Goblin
   m_EditorClassIdentifier: Assembly-CSharp::NPC.EnemiesStatus
   maxHealth: 100
-  moveSpeed: 10
+  moveSpeed: 3
   patrolDistance: 20
   detectionRange: 10
   attackRange: 5

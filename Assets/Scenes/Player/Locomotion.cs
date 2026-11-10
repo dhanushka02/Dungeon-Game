@@ -8,6 +8,7 @@ public class Locomotion : MonoBehaviour
     Transform CameraObject;
     [SerializeField] private Transform cameraReference;
     InputHandler inputHandler;
+    private Attack attackHandler;
     Vector3 MoveDirection;
     [HideInInspector]
     public Transform myTransform;
@@ -30,6 +31,7 @@ public class Locomotion : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         inputHandler = GetComponent<InputHandler>();
+        attackHandler = GetComponent<Attack>();
         animatorHandler = GetComponent<Animation>();
         // CameraObject = Camera.main.transform;
         myTransform = transform;
@@ -76,16 +78,20 @@ public class Locomotion : MonoBehaviour
     }
     private void HandleJump()
     {
-        if (inputHandler.Jump && isGrounded)
-        {
-            rigidbody.linearVelocity = new Vector3(
-                rigidbody.linearVelocity.x,
-                jumpForce,
-                rigidbody.linearVelocity.z
-            );
+        if (!inputHandler.Jump)
+            return;
 
-            inputHandler.Jump = false;
-        }
+        inputHandler.Jump = false;
+        if (!isGrounded || !animatorHandler.CanStartAction)
+            return;
+
+        rigidbody.linearVelocity = new Vector3(
+            rigidbody.linearVelocity.x,
+            jumpForce,
+            rigidbody.linearVelocity.z
+        );
+
+        animatorHandler.SetJumping(true);
     }
     public void Update()
     {
@@ -108,7 +114,10 @@ public class Locomotion : MonoBehaviour
 
         CheckGround();
         HandleJump();
-        animatorHandler.SetJumping(!isGrounded);
+        animatorHandler.SetJumping(
+            !isGrounded || rigidbody.linearVelocity.y > 0.1f
+        );
+        attackHandler?.HandleInput();
 
         float speed = movementSpeed;
         MoveDirection *= speed;
