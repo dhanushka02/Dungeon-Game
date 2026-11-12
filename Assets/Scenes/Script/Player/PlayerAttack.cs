@@ -10,7 +10,7 @@ public class PlayerAttack : MonoBehaviour
     public Transform attackPoint;
     public LayerMask enemyLayer;
 
-    public float attackRange = 1f;
+    public float attackRange = 5f;
     public int attackDamage = 20;
     public float attackCooldown = 0.6f;
     public float damageDelay = 0.3f;
@@ -18,6 +18,26 @@ public class PlayerAttack : MonoBehaviour
 
     private float lastAttackTime = -10f;
     private int combo = 0;
+
+    void Awake()
+    {
+        if (playerAnimation == null)
+            playerAnimation = GetComponent<PlayerAnimation>();
+
+        if (playerHealth == null)
+            playerHealth = GetComponent<PlayerHealth>();
+
+        if (attackPoint == null)
+        {
+            GameObject point = new GameObject("AttackPoint");
+
+            point.transform.SetParent(transform);
+            point.transform.localPosition =
+                new Vector3(0f, 1f, 1f);
+
+            attackPoint = point.transform;
+        }
+    }
 
     void Update()
     {
@@ -31,21 +51,6 @@ public class PlayerAttack : MonoBehaviour
             Attack();
         }
     }
-
-    void Awake()
-    {
-        playerAnimation = GetComponent<PlayerAnimation>();
-        playerHealth = GetComponent<PlayerHealth>();
-
-        if (attackPoint == null)
-        {
-            GameObject point = new GameObject("AttackPoint");
-            point.transform.SetParent(transform);
-            point.transform.localPosition = new Vector3(0f, 1f, 1f);
-            attackPoint = point.transform;
-        }
-    }
-
 
     void Attack()
     {
@@ -75,7 +80,8 @@ public class PlayerAttack : MonoBehaviour
         if (combo > 3)
             combo = 1;
 
-        string animationName = PlayerAnimation.attack1Animation;
+        string animationName =
+            PlayerAnimation.attack1Animation;
 
         if (combo == 2)
             animationName = PlayerAnimation.attack2Animation;
@@ -85,13 +91,15 @@ public class PlayerAttack : MonoBehaviour
 
         Debug.Log("Playing attack: " + animationName);
 
-        playerAnimation.PlayAction(animationName, attackCooldown);
+        playerAnimation.PlayAction(
+            animationName,
+            attackCooldown
+        );
 
         lastAttackTime = Time.time;
 
         StartCoroutine(DealDamageAfterDelay());
     }
-
 
     IEnumerator DealDamageAfterDelay()
     {
@@ -102,27 +110,73 @@ public class PlayerAttack : MonoBehaviour
 
         if (attackPoint == null)
         {
-            Debug.LogWarning("Attack Point has not been assigned.");
+            Debug.LogWarning("Attack Point is missing!");
             yield break;
         }
 
-        Collider[] enemies = Physics.OverlapSphere(
+        // Detect all colliders first to diagnose layer issues.
+        Collider[] allHits = Physics.OverlapSphere(
             attackPoint.position,
             attackRange,
-            enemyLayer
+            ~0,
+            QueryTriggerInteraction.Collide
         );
 
-        HashSet<GolemHealth> damagedEnemies = new HashSet<GolemHealth>();
+        Debug.Log("Total colliders detected: " + allHits.Length);
 
-        foreach (Collider enemy in enemies)
+        HashSet<GolemHealth> damagedEnemies =
+            new HashSet<GolemHealth>();
+
+        foreach (Collider hit in allHits)
         {
             GolemHealth golemHealth =
-                enemy.GetComponentInParent<GolemHealth>();
+                hit.GetComponentInParent<GolemHealth>();
 
-            if (golemHealth != null && damagedEnemies.Add(golemHealth))
+            if (golemHealth == null)
+                continue;
+
+            int layerMask = 1 << hit.gameObject.layer;
+
+            if ((enemyLayer.value & layerMask) == 0)
+            {
+                Debug.LogWarning(
+                    "Golem detected, but excluded by Enemy Layer: " +
+                    hit.gameObject.name
+                );
+
+                continue;
+            }
+
+            if (damagedEnemies.Add(golemHealth))
             {
                 golemHealth.TakeDamage(attackDamage);
+
+                Debug.Log(
+                    "Golem damaged: " + golemHealth.name +
+                    " | Damage: " + attackDamage
+                );
             }
         }
+
+        if (damagedEnemies.Count == 0)
+        {
+            Debug.LogWarning(
+                "No Golem damaged. Check Attack Point, " +
+                "Collider and Enemy Layer."
+            );
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+
+        Gizmos.color = Color.red;
+
+        Gizmos.DrawWireSphere(
+            attackPoint.position,
+            attackRange
+        );
     }
 }

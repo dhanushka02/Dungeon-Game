@@ -33,22 +33,23 @@ public class BossPhases : MonoBehaviour
 
     [Header("Movement")]
     public float detectionRange = 14f;
-    public float moveSpeed = 2f;
-    public float stoppingDistance = 2.3f;
+    public float moveSpeed = 2.5f;
+    public float stoppingDistance = 2.2f;
     public float rotationSpeed = 360f;
 
     [Header("Attack Timing")]
     public float attackCooldown = 2.5f;
     public float comboCooldown = 4f;
-    public float firstAttackDelay = 0.3f;
+    public float firstAttackDelay = 0.5f;
+    public float animationFadeTime = 0.1f;
 
     [Header("Jump Attack")]
-    public float jumpMinDistance = 3f;
+    public float jumpMinDistance = 0f;
     public float jumpMaxDistance = 14f;
-    public float jumpHeight = 3f;
-    public float jumpDuration = 1.5f;
+    public float jumpHeight = 4f;
+    public float jumpDuration = 1.2f;
     public float jumpLandingDistance = 0.5f;
-    public float jumpWindup = 0.4f;
+    public float jumpWindup = 0.5f;
     public float jumpCooldown = 7f;
 
     [Header("Boss Phases")]
@@ -58,9 +59,9 @@ public class BossPhases : MonoBehaviour
     [Range(0f, 1f)]
     public float phaseThreeAt = 0.3f;
 
-    public float phaseTransitionSeconds = 2f;
+    public float phaseTransitionSeconds = 1.3f;
     public string phaseTwoAnimation = "Roar";
-    public string phaseThreeAnimation = "Enrage";
+    public string phaseThreeAnimation = "Roar";
 
     [Header("Attacks")]
     public List<Move> moves = new List<Move>();
@@ -73,6 +74,13 @@ public class BossPhases : MonoBehaviour
     private bool busy;
     private bool died;
     private bool hasJumpedOnce;
+    private bool attackAnimationLocked;
+
+    // Leap movement is controlled only by LateUpdate.
+    private bool leapActive;
+    private Vector3 leapStartPosition;
+    private Vector3 lockedTargetPosition;
+    private float leapElapsed;
 
     private float nextAttackTime;
     private float nextJumpTime;
@@ -124,7 +132,8 @@ public class BossPhases : MonoBehaviour
             return;
         }
 
-        if (player == null || busy)
+        // Never interrupt an active attack or leap.
+        if (player == null || busy || leapActive)
             return;
 
         int desiredPhase =
@@ -161,25 +170,21 @@ public class BossPhases : MonoBehaviour
 
         FacePlayer(direction);
 
-        // Opening attack: jump before walking.
-        if (!hasJumpedOnce &&
-            Time.time >= nextAttackTime)
+        // First encounter: lock the player and leap.
+        // Do not walk toward the player first.
+        if (!hasJumpedOnce)
         {
             Move openingJump = FindJumpMove(distance);
 
             if (openingJump != null)
             {
-                StartCoroutine(Perform(openingJump));
+                if (Time.time >= nextAttackTime)
+                    StartCoroutine(Perform(openingJump));
+                else
+                    PlayState("Idle");
+
                 return;
             }
-        }
-
-        // Wait for the opening jump if it is available.
-        if (!hasJumpedOnce &&
-            FindJumpMove(distance) != null)
-        {
-            PlayState("Idle");
-            return;
         }
 
         // Walk during normal attack cooldown.
@@ -195,9 +200,12 @@ public class BossPhases : MonoBehaviour
 
         Move selectedMove = null;
 
-        // Jump again when the player is far enough away.
-        if (Time.time >= nextJumpTime)
+        // Leap again when the player is far away.
+        if (distance > stoppingDistance &&
+            Time.time >= nextJumpTime)
+        {
             selectedMove = FindJumpMove(distance);
+        }
 
         if (selectedMove == null)
             selectedMove = SelectNormalMove(distance);
@@ -213,6 +221,46 @@ public class BossPhases : MonoBehaviour
         else
         {
             PlayState("Idle");
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (!leapActive || died)
+            return;
+
+        leapElapsed += Time.deltaTime;
+
+        float duration = Mathf.Max(0.1f, jumpDuration);
+        float t = Mathf.Clamp01(leapElapsed / duration);
+
+        // Move horizontally toward the locked target.
+        float moveT = Mathf.SmoothStep(0f, 1f, t);
+
+        Vector3 position = Vector3.Lerp(
+            leapStartPosition,
+            lockedTargetPosition,
+            moveT
+        );
+
+        // Rise into the air and then descend.
+        position.y =
+            Mathf.Lerp(
+                leapStartPosition.y,
+                lockedTargetPosition.y,
+                moveT)
+            + Mathf.Sin(t * Mathf.PI) * jumpHeight;
+
+        transform.position = position;
+
+        if (t >= 1f)
+        {
+            transform.position = lockedTargetPosition;
+            leapActive = false;
+
+            Debug.Log(
+                "BOSS LANDED AT TARGET: " +
+                transform.position);
         }
     }
 
@@ -240,11 +288,10 @@ public class BossPhases : MonoBehaviour
 
     Move FindJumpMove(float distance)
     {
-        if (distance < jumpMinDistance ||
-            distance > jumpMaxDistance)
+        if (distance > detectionRange)
             return null;
 
-        // Prefer the dedicated Jump Attack.
+        // Prioritize the dedicated Jump Attack.
         foreach (Move move in moves)
         {
             if (move.label != "Jump Attack")
@@ -259,7 +306,7 @@ public class BossPhases : MonoBehaviour
             return move;
         }
 
-        // Fallback to other unlocked leap attacks.
+        // Fallback to other leap attacks.
         foreach (Move move in moves)
         {
             if (!IsJumpMove(move))
@@ -334,7 +381,7 @@ public class BossPhases : MonoBehaviour
 
     void MoveTowardsPlayer()
     {
-        if (player == null)
+        if (player == null || busy || leapActive)
             return;
 
         Vector3 targetPosition = new Vector3(
@@ -361,7 +408,7 @@ public class BossPhases : MonoBehaviour
                 ? phaseTwoAnimation
                 : phaseThreeAnimation;
 
-        PlayState(state);
+        PlayState(state, true);
 
         yield return new WaitForSeconds(
             phaseTransitionSeconds);
@@ -369,7 +416,7 @@ public class BossPhases : MonoBehaviour
         nextAttackTime = Time.time + 2f;
 
         busy = false;
-        PlayState("Idle");
+        PlayState("Idle", true);
     }
 
     IEnumerator Perform(Move move)
@@ -382,16 +429,22 @@ public class BossPhases : MonoBehaviour
 
         if (shouldJump)
         {
-            // Capture the player's position before the leap.
-            Vector3 target = player.position;
+            hasJumpedOnce = true;
+
+            // Capture the player's position once.
+            Vector3 targetPosition = player.position;
 
             Vector3 direction =
-                target - transform.position;
+                targetPosition - transform.position;
 
             direction.y = 0f;
 
-            landingPosition = target;
-            landingPosition.y = transform.position.y;
+            // Land near the player's locked position.
+            landingPosition = new Vector3(
+                targetPosition.x,
+                transform.position.y,
+                targetPosition.z
+            );
 
             if (direction.sqrMagnitude > 0.001f)
             {
@@ -399,6 +452,12 @@ public class BossPhases : MonoBehaviour
                     direction.normalized *
                     jumpLandingDistance;
             }
+
+            FacePlayer(direction);
+
+            Debug.Log(
+                "BOSS TARGET LOCKED: " +
+                landingPosition);
         }
 
         if (move.warning)
@@ -412,18 +471,23 @@ public class BossPhases : MonoBehaviour
 
         if (shouldJump)
         {
-            hasJumpedOnce = true;
-
-            PlayState("Roar");
+            // Prepare the leap while standing still.
+            PlayState("Roar", true);
 
             yield return new WaitForSeconds(
                 jumpWindup);
 
-            PlayState(move.animatorState);
+            if (hp == null || hp.IsDead())
+                yield break;
+
+            // Play the leap animation.
+            PlayState(move.animatorState, true);
+            attackAnimationLocked = true;
 
             Debug.Log(
                 "BOSS LEAP START: " + move.label);
 
+            // Actual movement is handled in LateUpdate.
             yield return StartCoroutine(
                 BossJump(landingPosition));
 
@@ -431,7 +495,8 @@ public class BossPhases : MonoBehaviour
         }
         else
         {
-            PlayState(move.animatorState);
+            PlayState(move.animatorState, true);
+            attackAnimationLocked = true;
 
             yield return new WaitForSeconds(
                 move.windup);
@@ -441,6 +506,10 @@ public class BossPhases : MonoBehaviour
 
         if (hp != null && !hp.IsDead())
             DealDamage(move);
+
+        // Do not interrupt the attack animation.
+        yield return StartCoroutine(
+            WaitForAttackAnimation(move.animatorState));
 
         yield return new WaitForSeconds(
             move.recovery);
@@ -457,45 +526,77 @@ public class BossPhases : MonoBehaviour
 
         nextAttackTime = Time.time + cooldown;
 
+        attackAnimationLocked = false;
         busy = false;
-        PlayState("Idle");
+
+        PlayState("Idle", true);
     }
 
     IEnumerator BossJump(Vector3 landingPosition)
     {
-        Vector3 startPosition = transform.position;
+        leapStartPosition = transform.position;
+        lockedTargetPosition = landingPosition;
 
-        float duration = Mathf.Max(0.1f, jumpDuration);
-        float elapsed = 0f;
+        leapElapsed = 0f;
+        leapActive = true;
 
-        while (elapsed < duration)
+        Debug.Log(
+            "BOSS JUMP FROM: " + leapStartPosition +
+            " TO: " + lockedTargetPosition);
+
+        while (leapActive)
         {
             if (hp == null || hp.IsDead())
+            {
+                leapActive = false;
                 yield break;
-
-            elapsed += Time.deltaTime;
-
-            float t =
-                Mathf.Clamp01(elapsed / duration);
-
-            Vector3 position =
-                Vector3.Lerp(
-                    startPosition,
-                    landingPosition,
-                    t);
-
-            position.y +=
-                Mathf.Sin(t * Mathf.PI) *
-                jumpHeight;
-
-            transform.position = position;
+            }
 
             yield return null;
         }
+    }
 
-        transform.position = landingPosition;
+    IEnumerator WaitForAttackAnimation(string state)
+    {
+        if (!HasState(state))
+            yield break;
 
-        Debug.Log("BOSS LEAP FINISHED");
+        int hash = Animator.StringToHash(
+            "Base Layer." + state);
+
+        float timeout = 0f;
+
+        // Wait until the attack state becomes active.
+        while (timeout < 1f)
+        {
+            AnimatorStateInfo info =
+                animator.GetCurrentAnimatorStateInfo(0);
+
+            if (info.fullPathHash == hash)
+                break;
+
+            timeout += Time.deltaTime;
+            yield return null;
+        }
+
+        // Wait until the animation finishes.
+        timeout = 0f;
+
+        while (timeout < 10f)
+        {
+            AnimatorStateInfo info =
+                animator.GetCurrentAnimatorStateInfo(0);
+
+            if (info.fullPathHash != hash)
+                break;
+
+            if (!info.loop &&
+                info.normalizedTime >= 1f)
+                break;
+
+            timeout += Time.deltaTime;
+            yield return null;
+        }
     }
 
     void DealDamage(Move move)
@@ -539,9 +640,12 @@ public class BossPhases : MonoBehaviour
         busy = true;
 
         StopAllCoroutines();
-        DestroyWarning();
 
-        PlayState("Death");
+        leapActive = false;
+        attackAnimationLocked = false;
+
+        DestroyWarning();
+        PlayState("Death", true);
     }
 
     bool HasState(string state)
@@ -556,17 +660,20 @@ public class BossPhases : MonoBehaviour
                 "Base Layer." + state));
     }
 
-    void PlayState(string state)
+    void PlayState(string state, bool force = false)
     {
         if (animator == null ||
             string.IsNullOrEmpty(state))
             return;
 
-        int stateHash =
-            Animator.StringToHash(
-                "Base Layer." + state);
+        // Prevent interruption of attack animations.
+        if (attackAnimationLocked && !force)
+            return;
 
-        if (!animator.HasState(0, stateHash))
+        int hash = Animator.StringToHash(
+            "Base Layer." + state);
+
+        if (!animator.HasState(0, hash))
         {
             Debug.LogWarning(
                 "Boss missing animation: " + state);
@@ -576,23 +683,21 @@ public class BossPhases : MonoBehaviour
         AnimatorStateInfo current =
             animator.GetCurrentAnimatorStateInfo(0);
 
-        if (current.fullPathHash == stateHash &&
+        if (current.fullPathHash == hash &&
             !animator.IsInTransition(0))
-        {
             return;
-        }
 
         if (animator.IsInTransition(0))
         {
             AnimatorStateInfo next =
                 animator.GetNextAnimatorStateInfo(0);
 
-            if (next.fullPathHash == stateHash)
+            if (next.fullPathHash == hash)
                 return;
         }
 
         animator.CrossFadeInFixedTime(
-            stateHash, 0.15f);
+            hash, animationFadeTime);
     }
 
     void ShowWarning(float radius, Vector3 position)
@@ -653,6 +758,10 @@ public class BossPhases : MonoBehaviour
     void OnDisable()
     {
         StopAllCoroutines();
+
+        leapActive = false;
+        attackAnimationLocked = false;
+
         DestroyWarning();
     }
 
@@ -667,7 +776,7 @@ public class BossPhases : MonoBehaviour
                 1, 0f, 2.8f, 17),
 
             NewMove("Jump Attack", "Combo3",
-                1, 3f, 14f, 22, true, true),
+                1, 0f, 14f, 22, true, true),
 
             NewMove("Ground Slam", "Combo3",
                 2, 0f, 4f, 25, true),
