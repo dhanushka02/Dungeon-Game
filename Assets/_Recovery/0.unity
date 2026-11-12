@@ -467,6 +467,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9137032837993464747, guid: d66c23583a584ef4195dbea312c0b2a7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 894800449}
+    - targetCorrespondingSourceObject: {fileID: 9137032837993464747, guid: d66c23583a584ef4195dbea312c0b2a7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 894800452}
   m_SourcePrefab: {fileID: 100100000, guid: d66c23583a584ef4195dbea312c0b2a7, type: 3}
 --- !u!1001 &363079316
 PrefabInstance:
@@ -1167,7 +1170,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 894800447}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 88d56c398a344914389e452fce446a69, type: 3}
   m_Name: 
@@ -1198,6 +1201,143 @@ MonoBehaviour:
   healthFill: {fileID: 124395628}
   bossHealthBar: {fileID: 124395630}
   bossHealthShowRange: 10
+--- !u!95 &894800450 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2550935751187727211, guid: d66c23583a584ef4195dbea312c0b2a7, type: 3}
+  m_PrefabInstance: {fileID: 258781448}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &894800452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894800447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e24e89b10106a434a93583806230f373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossPhases
+  player: {fileID: 1088285242}
+  animator: {fileID: 894800450}
+  detectionRange: 14
+  moveSpeed: 2.5
+  phaseTwoAt: 0.7
+  phaseThreeAt: 0.3
+  phaseTransitionSeconds: 1.3
+  phaseTwoAnimation: Roar
+  phaseThreeAnimation: Roar
+  moves:
+  - label: Left Punch
+    animatorState: PunchLeft
+    unlockPhase: 1
+    minDistance: 0
+    maxDistance: 2.2
+    windup: 0.5
+    recovery: 0.9
+    radius: 1.7
+    damage: 15
+    areaAttack: 0
+    warning: 1
+  - label: Right Hook
+    animatorState: PunchRight
+    unlockPhase: 1
+    minDistance: 0
+    maxDistance: 2.2
+    windup: 0.5
+    recovery: 0.9
+    radius: 1.7
+    damage: 16
+    areaAttack: 0
+    warning: 1
+  - label: Three Hit Combo
+    animatorState: Combo3
+    unlockPhase: 1
+    minDistance: 0
+    maxDistance: 2.4
+    windup: 0.5
+    recovery: 0.9
+    radius: 1.7
+    damage: 22
+    areaAttack: 0
+    warning: 1
+  - label: Ground Slam
+    animatorState: GroundSlam
+    unlockPhase: 2
+    minDistance: 0
+    maxDistance: 4
+    windup: 1.1
+    recovery: 1.5
+    radius: 4
+    damage: 25
+    areaAttack: 1
+    warning: 1
+  - label: Heavy Punch
+    animatorState: HeavyPunch
+    unlockPhase: 2
+    minDistance: 0
+    maxDistance: 2.5
+    windup: 0.5
+    recovery: 0.9
+    radius: 1.7
+    damage: 26
+    areaAttack: 0
+    warning: 1
+  - label: Charge Strike
+    animatorState: ChargeStrike
+    unlockPhase: 2
+    minDistance: 2.5
+    maxDistance: 7
+    windup: 0.5
+    recovery: 0.9
+    radius: 1.7
+    damage: 22
+    areaAttack: 0
+    warning: 1
+  - label: Double Slam
+    animatorState: DoubleSlam
+    unlockPhase: 2
+    minDistance: 0
+    maxDistance: 4
+    windup: 1.1
+    recovery: 1.5
+    radius: 4
+    damage: 28
+    areaAttack: 1
+    warning: 1
+  - label: Rage Combo
+    animatorState: RageCombo
+    unlockPhase: 3
+    minDistance: 0
+    maxDistance: 2.8
+    windup: 0.5
+    recovery: 0.9
+    radius: 1.7
+    damage: 35
+    areaAttack: 0
+    warning: 1
+  - label: Triple Slam
+    animatorState: TripleSlam
+    unlockPhase: 3
+    minDistance: 0
+    maxDistance: 4.5
+    windup: 1.1
+    recovery: 1.5
+    radius: 4.5
+    damage: 36
+    areaAttack: 1
+    warning: 1
+  - label: Ultimate Shockwave
+    animatorState: Ultimate
+    unlockPhase: 3
+    minDistance: 0
+    maxDistance: 6
+    windup: 1.1
+    recovery: 1.5
+    radius: 6
+    damage: 45
+    areaAttack: 1
+    warning: 1
 --- !u!1 &907815836
 GameObject:
   m_ObjectHideFlags: 0
