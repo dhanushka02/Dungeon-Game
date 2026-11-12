@@ -10,6 +10,8 @@ public class GolemHealth : MonoBehaviour
     public float bossHealthShowRange = 10f;
 
     private int currentHealth;
+    public int CurrentHealth => currentHealth;
+    public float HealthPercent => maxHealth > 0 ? (float)currentHealth / maxHealth : 0f;
     private Animator animator;
     private GolemAI golemAI;
     private Transform player;
