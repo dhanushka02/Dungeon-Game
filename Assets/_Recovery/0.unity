@@ -2135,26 +2135,26 @@ MonoBehaviour:
     areaAttack: 1
     warning: 1
     jumpAttack: 0
-  - label: Rage Combo
-    animatorState: RageCombo
+  - label: Breakdance
+    animatorState: Breakdance
     unlockPhase: 3
     minDistance: 0
-    maxDistance: 2.8
-    windup: 0.5
-    recovery: 0.9
-    radius: 1.7
+    maxDistance: 3.5
+    windup: 1
+    recovery: 2
+    radius: 3.5
     damage: 35
-    areaAttack: 0
+    areaAttack: 1
     warning: 1
     jumpAttack: 0
-  - label: Triple Slam
-    animatorState: TripleSlam
+  - label: Chapa Giratoria
+    animatorState: ChapaGiratoria
     unlockPhase: 3
     minDistance: 0
-    maxDistance: 4.5
-    windup: 1.1
+    maxDistance: 4
+    windup: 0.8
     recovery: 1.5
-    radius: 4.5
+    radius: 3
     damage: 36
     areaAttack: 1
     warning: 1
@@ -2183,16 +2183,16 @@ MonoBehaviour:
     areaAttack: 0
     warning: 1
     jumpAttack: 0
-  - label: Ultimate Shockwave
-    animatorState: Ultimate
+  - label: Martelo
+    animatorState: Martelo
     unlockPhase: 3
     minDistance: 0
     maxDistance: 6
-    windup: 1.1
-    recovery: 1.5
-    radius: 6
-    damage: 45
-    areaAttack: 1
+    windup: 0.7
+    recovery: 1.2
+    radius: 2.5
+    damage: 29
+    areaAttack: 0
     warning: 1
     jumpAttack: 0
 --- !u!136 &894800453
