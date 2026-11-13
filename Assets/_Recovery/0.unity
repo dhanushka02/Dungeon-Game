@@ -2159,6 +2159,30 @@ MonoBehaviour:
     areaAttack: 1
     warning: 1
     jumpAttack: 0
+  - label: "\tBackToFlip"
+    animatorState: BackToFlip
+    unlockPhase: 2
+    minDistance: 0
+    maxDistance: 4
+    windup: 0.8
+    recovery: 1.5
+    radius: 2.5
+    damage: 25
+    areaAttack: 0
+    warning: 1
+    jumpAttack: 0
+  - label: SkisorKick
+    animatorState: SkisorKick
+    unlockPhase: 2
+    minDistance: 0
+    maxDistance: 3
+    windup: 0.6
+    recovery: 1.2
+    radius: 2
+    damage: 22
+    areaAttack: 0
+    warning: 1
+    jumpAttack: 0
   - label: Ultimate Shockwave
     animatorState: Ultimate
     unlockPhase: 3

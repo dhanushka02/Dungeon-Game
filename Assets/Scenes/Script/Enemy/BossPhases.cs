@@ -398,26 +398,42 @@ public class BossPhases : MonoBehaviour
         PlayState("Walk");
     }
 
+    
     IEnumerator Transition(int nextPhase)
     {
         busy = true;
         phase = nextPhase;
 
-        string state =
-            phase == 2
-                ? phaseTwoAnimation
-                : phaseThreeAnimation;
+        string state = phase == 2
+            ? phaseTwoAnimation
+            : phaseThreeAnimation;
 
+        // Stop moving and play Roar.
         PlayState(state, true);
 
-        yield return new WaitForSeconds(
-            phaseTransitionSeconds);
+        // Wait until Roar finishes.
+        if (HasState(state))
+        {
+            yield return StartCoroutine(
+                WaitForAttackAnimation(state)
+            );
+        }
+        else
+        {
+            yield return new WaitForSeconds(
+                phaseTransitionSeconds
+            );
+        }
 
-        nextAttackTime = Time.time + 2f;
+        // Small pause after Roar.
+        yield return new WaitForSeconds(0.5f);
+
+        nextAttackTime = Time.time + 1f;
 
         busy = false;
         PlayState("Idle", true);
     }
+
 
     IEnumerator Perform(Move move)
     {
