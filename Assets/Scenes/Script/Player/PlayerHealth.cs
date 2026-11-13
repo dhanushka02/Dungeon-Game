@@ -13,6 +13,8 @@ public class PlayerHealth : MonoBehaviour
 
     private int currentHealth;
     private bool isDead = false;
+    [Header("Death Screen")]
+    public DeathScreen deathScreen;
 
     void Start()
     {
@@ -81,6 +83,11 @@ public class PlayerHealth : MonoBehaviour
 
         if (playerMovement != null)
             playerMovement.enabled = false;
+
+        if (deathScreen != null)
+        {
+            deathScreen.ShowDeathScreen();
+        }
     }
 
     public bool IsDead()
