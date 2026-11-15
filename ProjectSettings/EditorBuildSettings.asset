@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Starting Room By An.unity
     guid: 0ff31c4d0eaaeae48936fc661933d52d
   - enabled: 0
-    path: Assets/Scenes/BigRoomByDan.unity
+    path: Assets/Scenes/BigRoomByDanAlongWithHiddenRoombyDino.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
     path: Assets/Scenes/HallwayByMinh.unity
