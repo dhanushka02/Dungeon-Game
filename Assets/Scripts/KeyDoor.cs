@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class KeyDoor : MonoBehaviour
 {
@@ -53,8 +54,6 @@ public class KeyDoor : MonoBehaviour
             {
                 promptText.gameObject.SetActive(true);
 
-                // Only show the normal prompt if
-                // the "need key" message isn't showing
                 if (!showingNoKeyMessage)
                 {
                     promptText.text = "Press E to open door";
@@ -106,15 +105,12 @@ public class KeyDoor : MonoBehaviour
         showingNoKeyMessage = true;
 
         promptText.gameObject.SetActive(true);
-
         promptText.text = "You need a key to open this door!";
 
-        // Stay on this message for the chosen duration
         yield return new WaitForSeconds(messageDuration);
 
         showingNoKeyMessage = false;
 
-        // Check if player is still near the door
         if (player != null)
         {
             float distance = Vector3.Distance(
@@ -125,7 +121,6 @@ public class KeyDoor : MonoBehaviour
             if (distance <= interactionDistance)
             {
                 promptText.text = "Press E to open door";
-                promptText.gameObject.SetActive(true);
             }
             else
             {
@@ -145,7 +140,7 @@ public class KeyDoor : MonoBehaviour
             promptText.gameObject.SetActive(false);
         }
 
-        // Make the door disappear
-        gameObject.SetActive(false);
+        // Load the next scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
