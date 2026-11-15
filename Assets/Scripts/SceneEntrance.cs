@@ -6,6 +6,7 @@ public class SceneEntrance : MonoBehaviour
 {
     [SerializeField] private GameObject interactionPrompt;
     [SerializeField] private string destinationScene = "CastleInterior";
+    [SerializeField] private bool loadOnEnter;
 
     private bool playerInRange;
     private bool isLoading;
@@ -29,6 +30,12 @@ public class SceneEntrance : MonoBehaviour
     {
         if (!IsPlayer(other))
             return;
+
+        if (loadOnEnter)
+        {
+            EnterCastle();
+            return;
+        }
 
         playerInRange = true;
 
