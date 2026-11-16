@@ -57,6 +57,8 @@ public sealed class CastleSonRescue : MonoBehaviour
 
     private void Update()
     {
+        if (ending) return;
+
         bool use = Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame;
         bool escape = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
         bool inside = roomBounds.Contains(player.transform.position);
@@ -64,12 +66,6 @@ public sealed class CastleSonRescue : MonoBehaviour
         {
             entered = true;
             Say("Son: Dad? Over here!", 4f);
-        }
-        if (ending)
-        {
-            if (IsComplete && (use || Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame))
-                ContinueExploring();
-            return;
         }
         if (IsTalking)
         {
@@ -175,16 +171,6 @@ public sealed class CastleSonRescue : MonoBehaviour
         endingPanel.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-    }
-
-    public void ContinueExploring()
-    {
-        if (!ending || !IsComplete) return;
-        ending = false;
-        endingPanel.SetActive(false);
-        fade.alpha = 0f;
-        RestoreControls();
-        Say("Your son is safe. You can continue exploring.", 4f);
     }
 
     private IEnumerator LowerAxe()
