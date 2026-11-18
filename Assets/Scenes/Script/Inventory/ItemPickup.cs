@@ -4,7 +4,7 @@ using UnityEngine;
 public class ItemPickup : MonoBehaviour
 {
     public ItemData item;
-    public float pickupRange = 20f;
+    public float pickupRange = 50f;
 
     private static ItemPickup closestItem;
     private static float closestDistance;

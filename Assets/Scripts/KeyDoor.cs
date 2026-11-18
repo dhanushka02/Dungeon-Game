@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class KeyDoor : MonoBehaviour
 {
     [Header("Door Settings")]
-    [SerializeField] private float interactionDistance = 2.5f;
+    [SerializeField] private float interactionDistance = 50f;
 
     [Header("Player")]
     [SerializeField] private Transform player;
@@ -140,7 +140,7 @@ public class KeyDoor : MonoBehaviour
             promptText.gameObject.SetActive(false);
         }
 
-        // // Load the next scene
-        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        KeyPickup.HasKey = false;
+        Destroy(gameObject);
     }
 }
