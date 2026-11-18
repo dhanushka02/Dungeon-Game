@@ -118,7 +118,7 @@ Material:
     - _DistortionStrength: 1
     - _DistortionStrengthScaled: 0
     - _DstBlend: 1
-    - _DstBlendAlpha: 0
+    - _DstBlendAlpha: 1
     - _EmissionEnabled: 1
     - _Enable_Camera_Fade: 0
     - _Enable_Scene_Fog: 0
