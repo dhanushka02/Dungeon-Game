@@ -140,7 +140,7 @@ public class KeyDoor : MonoBehaviour
             promptText.gameObject.SetActive(false);
         }
 
-        // Load the next scene
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        // // Load the next scene
+        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

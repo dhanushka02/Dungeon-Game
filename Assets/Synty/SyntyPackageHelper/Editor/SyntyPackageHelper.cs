@@ -83,8 +83,11 @@ public class SyntyPackageHelper
             config.hasPromptedUser = true;
         }
 
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
+        EditorApplication.delayCall += () =>
+        {
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        };
 
         if(packagesToInstall.Count == 0)
         {
