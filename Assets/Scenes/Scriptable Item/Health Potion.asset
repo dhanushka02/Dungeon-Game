@@ -20,5 +20,7 @@ MonoBehaviour:
   itemType: 0
   stackable: 1
   canUse: 1
-  healAmount: 30
+  weaponDamage: 0
+  consumableType: 0
+  amount: 30
   maxStack: 10

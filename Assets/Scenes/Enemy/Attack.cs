@@ -1,5 +1,4 @@
 using UnityEngine;
-using Test2;
 
 namespace NPC
 {
@@ -12,11 +11,13 @@ namespace NPC
 
         public EnemiesStatus stat;
         private bool hasAttacked;
+        private bool hitPlayer;
 
         public bool IsAttacking => isAttacking;
 
         private void Start()
         {
+            movementRoot = transform.root;
             animator = GetComponentInChildren<Animator>();
 
             Target target = GetComponent<Target>();
@@ -59,19 +60,17 @@ namespace NPC
                 return false;
 
             animator.SetFloat(SpeedParameter, 0f);
-            Vector3 direction = player.position - transform.position;
-            direction.y = 0f;
-
+            Vector3 direction = player.position - movementRoot.position;
             if (direction != Vector3.zero)
-                transform.forward = direction.normalized;
+                FaceDirection(direction);
 
             if (isAttacking ||
                 (hasAttacked && Time.time < lastAttackTime + stat.attackCooldown))
                 return true;
 
             isAttacking = true;
+            hitPlayer = false;
             animator.SetTrigger(AttackTrigger);
-            Invoke(nameof(DealDamage), stat.damageDelay);
             Invoke(nameof(FinishAttack), stat.attackDuration);
             lastAttackTime = Time.time;
             hasAttacked = true;
@@ -79,22 +78,28 @@ namespace NPC
             return true;
         }
 
-        private void DealDamage()
+        public void TryHitPlayer(Collider other)
         {
-            if (player == null || stat == null)
+            if (!enabled || !isAttacking || hitPlayer || player == null || stat == null)
                 return;
 
-            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-            if (playerHealth == null || playerHealth.IsDead())
+            EnemyHealth enemyHealth = GetComponent<EnemyHealth>();
+            if (enemyHealth != null && enemyHealth.IsDead())
                 return;
 
-            if (GetPlanarDistance(player.position) <= stat.attackRange)
-                playerHealth.TakeDamage(stat.attackDamage);
+            Test2.PlayerHealth playerHealth = other.GetComponentInParent<Test2.PlayerHealth>();
+            if (playerHealth == null || playerHealth.transform != player ||
+                playerHealth.IsDead() || other != playerHealth.GetComponent<CapsuleCollider>() ||
+                stat.attackDamage <= 0)
+                return;
+
+            hitPlayer = true;
+            playerHealth.TakeDamage(stat.attackDamage);
         }
 
         private float GetPlanarDistance(Vector3 targetPosition)
         {
-            Vector3 offset = targetPosition - transform.position;
+            Vector3 offset = targetPosition - movementRoot.position;
             offset.y = 0f;
             return offset.magnitude;
         }

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using NPC;
 namespace NPC
 {
-    public class GolemHealth : Status
+    public class EnemyHealth : Status
 {        
     public EnemiesStatus stat;
     protected int currentHealth;
@@ -14,7 +14,7 @@ namespace NPC
     void Start()
     {
         currentHealth = stat.maxHealth;
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         golemAI = GetComponent<Target>();
 
         UpdateHealthBar();

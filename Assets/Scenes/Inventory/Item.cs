@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Invent
 {
@@ -10,6 +11,14 @@ public enum ItemType
     Material,
     Quest
 }
+
+public enum ConsumableType
+{
+    HP,
+    Dmg,
+    Shield
+}
+
 [CreateAssetMenu(
     fileName = "New Item",
     menuName = "Inventory/Item"
@@ -34,7 +43,12 @@ public class ItemData : ScriptableObject
 
     [Header("Usage")]
     public bool canUse = false;
-    public int healAmount = 0;
+    [Min(0)]
+    public int weaponDamage;
+    public ConsumableType consumableType;
+    [FormerlySerializedAs("healAmount")]
+    [Min(0)]
+    public int amount;
 
     [Min(1)]
     public int maxStack = 10;

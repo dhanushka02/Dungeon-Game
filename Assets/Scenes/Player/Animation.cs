@@ -14,10 +14,15 @@ public class Animation : MonoBehaviour
     private static readonly int PickupState =
         Animator.StringToHash("Pick Item");
     private static readonly int LightAttackState =
-        Animator.StringToHash("Light Attack");
+        Animator.StringToHash("Unarmed Attack");
+    private static readonly int LongSwordAttackState =
+        Animator.StringToHash("LongSword Attack");
 
     [Header("Equipment State")]
     [SerializeField] private Invent.ItemData equippedWeapon;
+    [SerializeField] private Transform weaponSocket;
+    [SerializeField] private Vector3 weaponSocketPosition = new Vector3(-0.08881251f, -0.022271466f, 0.03837269f);
+    [SerializeField] private Vector3 weaponSocketRotation = new Vector3(68.2227f, 114.4689f, 92.3270f);
 
     public Animator anim;
     int vertical;
@@ -25,20 +30,43 @@ public class Animation : MonoBehaviour
     public bool canRotate;
     int isJumping;
     private bool jumping;
+    private bool dodging;
+    private bool dodgePending;
     private Invent.Inventory inventory;
+    private GameObject weaponVisual;
+    private bool forearmHitboxesConfigured;
 
     public bool HasEquippedWeapon => equippedWeapon != null;
     public Invent.ItemData EquippedWeapon => equippedWeapon;
-    public bool CanStartAction
+    public bool CanStartAction => !dodgePending && CanStartDodge(false);
+
+    public bool HasWeaponInHand()
     {
-        get
+        EnsureAnimator();
+        if (anim == null || !anim.isHuman)
+            return false;
+
+        Transform hand = anim.GetBoneTransform(HumanBodyBones.RightHand);
+        if (hand == null)
+            return false;
+
+        foreach (Transform child in hand.GetComponentsInChildren<Transform>())
         {
-            EnsureAnimator();
-            return !jumping &&
-                !IsStateActive(JumpState) &&
-                !IsStateActive(PickupState) &&
-                !IsStateActive(LightAttackState);
+            if (child.gameObject.activeInHierarchy && child.CompareTag("Weapon"))
+                return true;
         }
+
+        return false;
+    }
+
+    public bool CanStartDodge(bool afterCombo)
+    {
+        EnsureAnimator();
+        return !jumping && !dodging &&
+            !IsStateActive(JumpState) &&
+            !IsStateActive(PickupState) &&
+            (afterCombo ||
+                (!IsStateActive(LightAttackState) && !IsStateActive(LongSwordAttackState)));
     }
 
     private void OnEnable()
@@ -47,39 +75,100 @@ public class Animation : MonoBehaviour
         if (inventory == null)
             return;
 
-        inventory.OnItemAdded += HandleItemAdded;
         inventory.OnInventoryChanged += ValidateEquippedWeapon;
+        ValidateEquippedWeapon();
     }
 
     private void OnDisable()
     {
         if (inventory != null)
         {
-            inventory.OnItemAdded -= HandleItemAdded;
             inventory.OnInventoryChanged -= ValidateEquippedWeapon;
         }
 
         inventory = null;
-    }
-
-    private void HandleItemAdded(Invent.ItemData item)
-    {
-        if (item != null && item.itemType == Invent.ItemType.Weapon)
-            equippedWeapon = item;
+        ClearWeaponVisual();
     }
 
     private void ValidateEquippedWeapon()
     {
-        if (equippedWeapon == null || inventory == null)
+        Invent.ItemData weapon = inventory != null ? inventory.EquippedWeapon : null;
+        if (equippedWeapon == weapon && (weapon == null || weaponVisual != null))
             return;
 
-        foreach (Invent.InventorySlot slot in inventory.slots)
+        equippedWeapon = weapon;
+        ClearWeaponVisual();
+        if (weapon == null)
+            return;
+
+        if (weapon.worldPrefab == null)
         {
-            if (!slot.IsEmpty && slot.item == equippedWeapon)
-                return;
+            Debug.LogError("Equipped weapon has no world prefab: " + weapon.name, weapon);
+            return;
         }
 
-        equippedWeapon = null;
+        if (weaponSocket == null)
+        {
+            EnsureAnimator();
+            if (anim == null || !anim.isHuman)
+            {
+                Debug.LogError("Cannot create a weapon socket without a humanoid Animator.", this);
+                return;
+            }
+
+            Transform hand = anim.GetBoneTransform(HumanBodyBones.RightHand);
+            if (hand == null)
+            {
+                Debug.LogError("Cannot find the right hand bone for the weapon socket.", this);
+                return;
+            }
+
+            weaponSocket = new GameObject("RightHandWeaponSocket").transform;
+            weaponSocket.SetParent(hand, false);
+            weaponSocket.localPosition = weaponSocketPosition;
+            weaponSocket.localRotation = Quaternion.Euler(weaponSocketRotation);
+        }
+
+        weaponVisual = Instantiate(weapon.worldPrefab, weaponSocket, false);
+        weaponVisual.tag = "Weapon";
+        foreach (Invent.ItemPickup pickup in weaponVisual.GetComponentsInChildren<Invent.ItemPickup>(true))
+            pickup.enabled = false;
+        foreach (Collider collider in weaponVisual.GetComponentsInChildren<Collider>(true))
+            collider.enabled = false;
+        foreach (Rigidbody body in weaponVisual.GetComponentsInChildren<Rigidbody>(true))
+        {
+            body.isKinematic = true;
+            body.useGravity = false;
+        }
+
+        MeshFilter[] meshes = weaponVisual.GetComponentsInChildren<MeshFilter>();
+        if (meshes.Length == 0)
+            Debug.LogError("Equipped weapon has no mesh for its attack hitbox.", weaponVisual);
+
+        foreach (MeshFilter mesh in meshes)
+        {
+            if (mesh.sharedMesh == null)
+            {
+                Debug.LogError("Equipped weapon attack hitbox requires a mesh.", mesh);
+                continue;
+            }
+
+            MeshCollider hitbox = mesh.gameObject.AddComponent<MeshCollider>();
+            hitbox.sharedMesh = mesh.sharedMesh;
+            hitbox.convex = true;
+            hitbox.isTrigger = true;
+            mesh.gameObject.AddComponent<DealDmg>().Configure(true);
+        }
+    }
+
+    private void ClearWeaponVisual()
+    {
+        if (weaponVisual == null)
+            return;
+
+        weaponVisual.SetActive(false);
+        Destroy(weaponVisual);
+        weaponVisual = null;
     }
 
     public void Initialize()
@@ -89,6 +178,40 @@ public class Animation : MonoBehaviour
         horizontal = Animator.StringToHash("Horizontal");
         isJumping = Animator.StringToHash("IsJumping");
 
+        if (!forearmHitboxesConfigured)
+        {
+            if (anim == null || !anim.isHuman)
+            {
+                Debug.LogError("Player attack hitboxes require a humanoid Animator.", this);
+                return;
+            }
+
+            ConfigureForearmHitbox(HumanBodyBones.LeftLowerArm);
+            ConfigureForearmHitbox(HumanBodyBones.RightLowerArm);
+            forearmHitboxesConfigured = true;
+        }
+    }
+
+    private void ConfigureForearmHitbox(HumanBodyBones bone)
+    {
+        Transform forearm = anim.GetBoneTransform(bone);
+        if (forearm == null)
+        {
+            Debug.LogError("Player attack hitbox cannot find bone " + bone, this);
+            return;
+        }
+
+        CapsuleCollider collider = forearm.GetComponent<CapsuleCollider>();
+        if (collider == null || !collider.enabled || !collider.isTrigger)
+        {
+            Debug.LogError("Player forearm requires an enabled trigger Capsule Collider.", forearm);
+            return;
+        }
+
+        DealDmg hitbox = forearm.GetComponent<DealDmg>();
+        if (hitbox == null)
+            hitbox = forearm.gameObject.AddComponent<DealDmg>();
+        hitbox.Configure(false);
     }
     public bool PlayPickup()
     {
@@ -131,6 +254,16 @@ public class Animation : MonoBehaviour
         EnsureAnimator();
         if (anim != null)
             anim.SetBool(isJumping, jumping);
+    }
+
+    public void SetDodging(bool dodging)
+    {
+        this.dodging = dodging;
+    }
+
+    public void SetDodgePending(bool pending)
+    {
+        dodgePending = pending;
     }
 
     private void EnsureAnimator()

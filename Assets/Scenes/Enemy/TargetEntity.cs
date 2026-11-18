@@ -1,19 +1,41 @@
 using UnityEngine;
 using NPC;
-using Test2;
+using System.Collections.Generic;
 
 namespace NPC
 {
     public class Target : Status
     {
+        private static readonly List<Target> activeTargets = new List<Target>();
+        public static IReadOnlyList<Target> ActiveTargets => activeTargets;
+
         private static readonly int SpeedParameter =
             Animator.StringToHash("Speed");
 
         public EnemiesStatus stat;
         [SerializeField] private Attack attackHandler;
 
+        public bool DetectsPlayer =>
+            isActiveAndEnabled && player != null && stat != null &&
+            (player.GetComponent<Test2.PlayerHealth>() == null ||
+             !player.GetComponent<Test2.PlayerHealth>().IsDead()) &&
+            Vector3.Distance(
+                new Vector3(transform.root.position.x, 0f, transform.root.position.z),
+                new Vector3(player.position.x, 0f, player.position.z)) <= stat.detectionRange;
+
+        private void OnEnable()
+        {
+            activeTargets.Add(this);
+        }
+
+        private void OnDisable()
+        {
+            activeTargets.Remove(this);
+        }
+
         private void Start()
         {
+            movementRoot = transform.root;
             animator = GetComponentInChildren<Animator>();
             if (attackHandler == null)
                 attackHandler = GetComponent<Attack>();
@@ -25,8 +47,8 @@ namespace NPC
                 attackHandler.stat = stat;
             }
 
-            startPosition = transform.position;
-            patrolDirection = transform.forward;
+            startPosition = movementRoot.position;
+            patrolDirection = movementRoot.forward;
             endPosition = startPosition + patrolDirection * stat.patrolDistance;
         }
 
@@ -50,7 +72,7 @@ namespace NPC
                 return;
             }
 
-            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+            Test2.PlayerHealth playerHealth = player.GetComponent<Test2.PlayerHealth>();
             if (playerHealth != null && playerHealth.IsDead())
             {
                 SetMovementAnimation(0f);
@@ -84,19 +106,16 @@ namespace NPC
             SetMovementAnimation(1f);
 
             Vector3 targetPosition = movingToEnd ? endPosition : startPosition;
-            Vector3 direction = targetPosition - transform.position;
-            direction.y = 0f;
+            Vector3 direction = targetPosition - movementRoot.position;
+            FaceDirection(direction);
 
-            if (direction != Vector3.zero)
-                transform.forward = direction.normalized;
-
-            transform.position = Vector3.MoveTowards(
-                transform.position,
+            movementRoot.position = Vector3.MoveTowards(
+                movementRoot.position,
                 targetPosition,
                 stat.moveSpeed * Time.deltaTime
             );
 
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+            if (Vector3.Distance(movementRoot.position, targetPosition) < 0.1f)
             {
                 isWaiting = true;
                 waitTimer = 0f;
@@ -122,15 +141,14 @@ namespace NPC
             SetMovementAnimation(1f);
 
             Vector3 targetPosition = player.position;
-            targetPosition.y = transform.position.y;
-            Vector3 direction = targetPosition - transform.position;
+            targetPosition.y = movementRoot.position.y;
+            Vector3 direction = targetPosition - movementRoot.position;
 
             if (direction != Vector3.zero)
             {
-                Vector3 planarDirection = direction.normalized;
-                transform.rotation = Quaternion.LookRotation(planarDirection);
-                transform.position = Vector3.MoveTowards(
-                    transform.position,
+                FaceDirection(direction);
+                movementRoot.position = Vector3.MoveTowards(
+                    movementRoot.position,
                     targetPosition,
                     stat.moveSpeed * Time.deltaTime
                 );
@@ -149,9 +167,9 @@ namespace NPC
             if (player == null)
                 return;
 
-            PlayerHealth playerHealth = player.GetComponentInParent<PlayerHealth>();
+            Test2.PlayerHealth playerHealth = player.GetComponentInParent<Test2.PlayerHealth>();
             if (playerHealth == null)
-                playerHealth = player.GetComponentInChildren<PlayerHealth>();
+                playerHealth = player.GetComponentInChildren<Test2.PlayerHealth>();
 
             if (playerHealth != null)
                 player = playerHealth.transform;
@@ -159,7 +177,7 @@ namespace NPC
 
         private float GetPlanarDistance(Vector3 targetPosition)
         {
-            Vector3 offset = targetPosition - transform.position;
+            Vector3 offset = targetPosition - movementRoot.position;
             offset.y = 0f;
             return offset.magnitude;
         }

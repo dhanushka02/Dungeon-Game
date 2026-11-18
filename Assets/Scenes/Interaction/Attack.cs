@@ -7,6 +7,7 @@ namespace Test2
     {
         [SerializeField] private InputHandler inputHandler;
         [SerializeField] private Animation animationHandler;
+        [SerializeField] private Combo combo;
 
         private void Awake()
         {
@@ -15,17 +16,24 @@ namespace Test2
 
             if (animationHandler == null)
                 animationHandler = GetComponent<Animation>();
+
+            if (combo == null)
+                combo = GetComponent<Combo>();
+
+            if (combo == null)
+                combo = gameObject.AddComponent<Combo>();
         }
 
         public void HandleInput()
         {
-            if (inputHandler == null || animationHandler == null)
+            if (inputHandler == null || animationHandler == null || combo == null)
                 return;
 
             if (!inputHandler.ConsumeLightAttack())
                 return;
 
-            animationHandler.PlayLightAttack();
+            if (combo.IsAttacking || animationHandler.CanStartAction)
+                combo.OnAttackPressed();
         }
     }
 }

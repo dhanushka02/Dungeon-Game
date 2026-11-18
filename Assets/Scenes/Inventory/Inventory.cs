@@ -13,6 +13,9 @@ public class Inventory : MonoBehaviour
 
     public event Action OnInventoryChanged;
     public event Action<ItemData> OnItemAdded;
+    private InventorySlot equippedWeaponSlot;
+
+    public ItemData EquippedWeapon => equippedWeaponSlot != null ? equippedWeaponSlot.item : null;
 
     private void Awake()
     {
@@ -54,7 +57,7 @@ public class Inventory : MonoBehaviour
 
                     if (remaining <= 0)
                     {
-                        OnInventoryChanged?.Invoke();
+                        NotifyInventoryChanged();
                         OnItemAdded?.Invoke(item);
                         return true;
                     }
@@ -82,7 +85,7 @@ public class Inventory : MonoBehaviour
 
             if (remaining <= 0)
             {
-                OnInventoryChanged?.Invoke();
+                NotifyInventoryChanged();
                 OnItemAdded?.Invoke(item);
                 return true;
             }
@@ -91,7 +94,7 @@ public class Inventory : MonoBehaviour
         if (remaining < amount)
             OnItemAdded?.Invoke(item);
 
-        OnInventoryChanged?.Invoke();
+        NotifyInventoryChanged();
 
         return false;
     }
@@ -110,6 +113,27 @@ public class Inventory : MonoBehaviour
 
         if (slot.quantity <= 0)
             slot.Clear();
+
+        NotifyInventoryChanged();
+    }
+
+    private void NotifyInventoryChanged()
+    {
+        if (equippedWeaponSlot == null ||
+            !slots.Contains(equippedWeaponSlot) ||
+            equippedWeaponSlot.IsEmpty ||
+            equippedWeaponSlot.item.itemType != ItemType.Weapon)
+        {
+            equippedWeaponSlot = null;
+            foreach (InventorySlot slot in slots)
+            {
+                if (!slot.IsEmpty && slot.item.itemType == ItemType.Weapon)
+                {
+                    equippedWeaponSlot = slot;
+                    break;
+                }
+            }
+        }
 
         OnInventoryChanged?.Invoke();
     }

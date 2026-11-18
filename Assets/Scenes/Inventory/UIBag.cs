@@ -24,11 +24,23 @@ public class UIBag : MonoBehaviour
 
     private InventorySlot selectedSlot;
     private int selectedSlotIndex = -1;
+    private GridLayoutGroup slotGrid;
+    private RectTransform slotContainerRect;
+    private Vector2 lastSlotContainerSize;
+    private int lastSlotCount = -1;
 
     private void Start()
     {
         if (inventory == null)
             inventory = FindFirstObjectByType<Inventory>();
+
+        if (slotContainer != null)
+        {
+            slotGrid = slotContainer.GetComponent<GridLayoutGroup>();
+            slotContainerRect = slotContainer as RectTransform;
+            if (slotGrid == null || slotContainerRect == null)
+                Debug.LogError("Inventory slot container requires a RectTransform and GridLayoutGroup.", this);
+        }
 
         if (inventoryPanel != null)
             inventoryPanel.SetActive(false);
@@ -45,6 +57,9 @@ public class UIBag : MonoBehaviour
 
     private void Update()
     {
+        if (inventoryPanel != null && inventoryPanel.activeInHierarchy)
+            FitSlotsToContainer();
+
         if (!Input.GetKeyDown(KeyCode.I) || inventoryPanel == null)
             return;
 
@@ -75,6 +90,8 @@ public class UIBag : MonoBehaviour
                 slotUI.Setup(inventory.slots[i], i, this);
         }
 
+        FitSlotsToContainer();
+
         if (selectedSlotIndex >= 0)
         {
             if (selectedSlotIndex >= inventory.slots.Count || inventory.slots[selectedSlotIndex].IsEmpty)
@@ -82,6 +99,27 @@ public class UIBag : MonoBehaviour
             else
                 selectedSlot = inventory.slots[selectedSlotIndex];
         }
+    }
+
+    private void FitSlotsToContainer()
+    {
+        if (inventory == null || slotGrid == null || slotContainerRect == null)
+            return;
+
+        Vector2 size = slotContainerRect.rect.size;
+        int slotCount = inventory.slots.Count;
+        if (size == lastSlotContainerSize && slotCount == lastSlotCount)
+            return;
+
+        lastSlotContainerSize = size;
+        lastSlotCount = slotCount;
+
+        int columns = Mathf.Max(1, slotGrid.constraintCount);
+        int rows = Mathf.Max(1, Mathf.CeilToInt(slotCount / (float)columns));
+        float availableWidth = size.x - slotGrid.padding.horizontal - slotGrid.spacing.x * (columns - 1);
+        float availableHeight = size.y - slotGrid.padding.vertical - slotGrid.spacing.y * (rows - 1);
+        float cellSize = Mathf.Max(0, Mathf.Min(100f, availableWidth / columns, availableHeight / rows));
+        slotGrid.cellSize = new Vector2(cellSize, cellSize);
     }
 
     public void SelectItem(InventorySlot slot, int slotIndex)
@@ -99,7 +137,9 @@ public class UIBag : MonoBehaviour
             descriptionText.text = slot.item.description;
 
         if (useButton != null)
-            useButton.interactable = slot.item.canUse;
+            useButton.interactable = slot.item.canUse &&
+                slot.item.itemType == ItemType.Consumable &&
+                slot.item.consumableType == ConsumableType.Shield;
     }
 
     private void UseSelectedItem()
@@ -107,10 +147,28 @@ public class UIBag : MonoBehaviour
         if (inventory == null || selectedSlot == null || selectedSlot.IsEmpty || !selectedSlot.item.canUse)
             return;
 
+        if (selectedSlot.item.itemType != ItemType.Consumable ||
+            selectedSlot.item.consumableType != ConsumableType.Shield)
+        {
+            Debug.LogWarning("This item cannot be used manually.", inventory);
+            return;
+        }
+
+        Test2.PlayerHealth playerHealth = inventory.GetComponent<Test2.PlayerHealth>();
+        if (playerHealth == null)
+        {
+            Debug.LogError("Cannot use shield potion: inventory owner has no PlayerHealth.", inventory);
+            return;
+        }
+
+        if (!playerHealth.TryApplyShield(selectedSlot.item.amount))
+        {
+            Debug.LogWarning("Cannot use shield potion: the player is dead or the potion has no shield charges.", inventory);
+            return;
+        }
+
         Debug.Log("Used item: " + selectedSlot.item.itemName);
 
-        // The actual effect (heal/equip/etc.) is intentionally not applied here yet.
-        // UI/UX and gameplay effect wiring can be added after the PlayerHealth/equipment API is confirmed.
         inventory.RemoveItem(selectedSlotIndex, 1);
     }
 

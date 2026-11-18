@@ -15,10 +15,12 @@ MonoBehaviour:
   itemID: 001
   itemName: LongSword
   description: Basic Test
-  icon: {fileID: 21300000, guid: 7d0e1d7f7b2d33a4e9ac7321181fe22d, type: 3}
-  worldPrefab: {fileID: 0}
+  icon: {fileID: 21300000, guid: d16f2a4c99d54bc4a7b8318ef06e54c2, type: 3}
+  worldPrefab: {fileID: 1531339535813399235, guid: e18213b527e9be54d9513ce2dd5f3b67, type: 3}
   itemType: 1
   stackable: 0
   canUse: 0
-  healAmount: 0
+  weaponDamage: 10
+  consumableType: 0
+  amount: 0
   maxStack: 1

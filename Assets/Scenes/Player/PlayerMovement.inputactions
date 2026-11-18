@@ -364,7 +364,7 @@
                 {
                     "name": "",
                     "id": "f2e9ba44-c423-42a7-ad56-f20975884794",
-                    "path": "<Keyboard>/leftShift",
+                    "path": "<Keyboard>/leftCtrl",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -496,7 +496,7 @@
                 {
                     "name": "",
                     "id": "94ac9077-e12a-4273-8607-02b73fd4edae",
-                    "path": "<Keyboard>/leftCtrl",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",

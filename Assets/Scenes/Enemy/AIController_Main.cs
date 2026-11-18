@@ -8,14 +8,14 @@ namespace NPC
     {
         public Status status;
         public Attack attack;
-        public GolemHealth health;
+        public EnemyHealth health;
         public Target target;
         void Start()
         {
             Debug.Log("Connect File Succeed, prepare to detect");
             target = GetComponent<Target>();
             attack = GetComponent<Attack>();
-            health = GetComponent<GolemHealth>();
+            health = GetComponent<EnemyHealth>();
         }
         void Update()
         {

@@ -22,6 +22,9 @@ namespace Test2
         Cam cameraHandler;
         Vector2 MovementInput;
         Vector2 CameraInput;
+        Vector2 dodgeMovement;
+        bool dodgePressed;
+        bool dodgeDuringCombo;
         // private void Awake()
         // {
         //     cameraHandler = Cam.sigleton;
@@ -63,6 +66,7 @@ namespace Test2
                 Action.Player.Jump.performed += ctx => Jump = true;
                 Action.Player.Jump.canceled += ctx => Jump = false;           
                 Action.Player.Attack.performed += ctx => Light = true;
+                Action.Player.Dodge.performed += OnDodge;
                 Action.Player.Interact.performed += ctx => Interact = true;
                 Action.Player.Interact.canceled += ctx => Interact = false; 
             }
@@ -77,6 +81,31 @@ namespace Test2
             Jump = false;
             Interact = false;
             Light = false;
+            dodgePressed = false;
+        }
+
+        private void OnDodge(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        {
+            if (dodgePressed)
+                return;
+
+            dodgeMovement = MovementInput;
+            dodgePressed = true;
+            Combo combo = GetComponent<Combo>();
+            dodgeDuringCombo = combo != null && combo.IsAttacking;
+            if (combo != null)
+                combo.QueueDodge();
+        }
+
+        public bool ConsumeDodge(out Vector2 movement, out bool duringCombo)
+        {
+            movement = dodgeMovement;
+            duringCombo = dodgeDuringCombo;
+            if (!dodgePressed)
+                return false;
+
+            dodgePressed = false;
+            return true;
         }
 
         public bool ConsumeLightAttack()
