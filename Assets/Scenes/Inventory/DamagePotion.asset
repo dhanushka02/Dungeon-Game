@@ -15,7 +15,7 @@ MonoBehaviour:
   itemID: consumable.health_potion
   itemName: Health Potion
   description: Add 10 Dmg
-  icon: {fileID: 21300000, guid: 3532e2fbad5ffdd4d97b861221ad8637, type: 3}
+  icon: {fileID: 21300000, guid: 94401ab7d96ba9e4598ec3f9306f9411, type: 3}
   worldPrefab: {fileID: 0}
   itemType: 0
   stackable: 1

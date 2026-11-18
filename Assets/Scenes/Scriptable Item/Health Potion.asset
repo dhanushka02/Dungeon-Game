@@ -15,7 +15,7 @@ MonoBehaviour:
   itemID: 002
   itemName: Health Potion
   description: 
-  icon: {fileID: 21300000, guid: 3532e2fbad5ffdd4d97b861221ad8637, type: 3}
+  icon: {fileID: 21300000, guid: b9ce1d973bbf8e148876652aa52dce11, type: 3}
   worldPrefab: {fileID: 0}
   itemType: 0
   stackable: 1

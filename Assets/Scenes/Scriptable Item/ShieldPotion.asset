@@ -15,7 +15,7 @@ MonoBehaviour:
   itemID: 003
   itemName: Shield Potion
   description: 
-  icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 55d6a6af680c5584f8eb164afe44728a, type: 3}
   worldPrefab: {fileID: 0}
   itemType: 0
   stackable: 1

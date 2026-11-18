@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPC.EnemiesStatus
   maxHealth: 80
   moveSpeed: 3
-  patrolDistance: 15
-  detectionRange: 20
+  patrolDistance: 10
+  detectionRange: 10
   attackRange: 5
   attackDamage: 8
   attackCooldown: 5

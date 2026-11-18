@@ -15,7 +15,7 @@ MonoBehaviour:
   itemID: 001
   itemName: Short Sword
   description: Basic Test
-  icon: {fileID: 21300000, guid: d16f2a4c99d54bc4a7b8318ef06e54c2, type: 3}
+  icon: {fileID: 21300000, guid: 75d1d7655ba461d41af35df7f6e2ece5, type: 3}
   worldPrefab: {fileID: 1531339535813399235, guid: e18213b527e9be54d9513ce2dd5f3b67, type: 3}
   itemType: 1
   stackable: 0

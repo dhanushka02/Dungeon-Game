@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 838c82a7a35d1ee47bbdaa326dd39a9b, type: 3}
   m_Name: Skeleton
   m_EditorClassIdentifier: Assembly-CSharp::NPC.EnemiesStatus
-  maxHealth: 50
+  maxHealth: 150
   moveSpeed: 3
-  patrolDistance: 20
+  patrolDistance: 0
   detectionRange: 20
-  attackRange: 10
-  attackDamage: 15
+  attackRange: 15
+  attackDamage: 25
   attackCooldown: 3
   attackDuration: 1
   damageDelay: 1
-  waitTime: 10
+  waitTime: 1
