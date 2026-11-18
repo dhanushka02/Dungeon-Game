@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ad4d7cfe397baf44387a79cf98046489
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 267512
+  packageName: MIGHTY MAPS
+  packageVersion: 1.7.6
+  assetPath: Assets/MightyDevOps/Core/Models/HeatmapShader.shader
+  uploadId: 902662
