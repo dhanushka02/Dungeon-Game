@@ -246,6 +246,27 @@ namespace StarterAssets
 			}
 		}
 
+		// Checkpoints clear movement without resetting inventory or reloading the scene.
+		public void ResetAfterTeleport()
+		{
+			_verticalVelocity = -2f;
+			_speed = 0f;
+			_rotationVelocity = 0f;
+			_cinemachineTargetPitch = 0f;
+			_jumpTimeoutDelta = JumpTimeout;
+			_fallTimeoutDelta = FallTimeout;
+			Grounded = true;
+			if (CinemachineCameraTarget != null)
+				CinemachineCameraTarget.transform.localRotation = Quaternion.identity;
+			if (_input != null)
+			{
+				_input.move = Vector2.zero;
+				_input.look = Vector2.zero;
+				_input.jump = false;
+				_input.sprint = false;
+			}
+		}
+
 		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
 		{
 			if (lfAngle < -360f) lfAngle += 360f;

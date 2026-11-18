@@ -13,8 +13,8 @@ axe/key gate section and break WoodWall1 (currently five hits).
    MOON, SUN, STAR. A wrong choice extinguishes all flames so you can retry.
    Pressing an already-lit torch does not count again.
 4. The portcullis rises automatically after the third correct torch. The
-   objective changes to continue searching beyond the gate. Knocking is
-   currently disabled; Enable Knocking on Castle Son Puzzle restores it.
+   objective changes to continue searching beyond the gate. The metal knocking clip
+   plays once when the gate finishes rising.
 
 There is no additional scene transition or final rescue in this section.
 Puzzle progress resets when Play mode restarts, like the existing key puzzle.
@@ -30,7 +30,9 @@ CastleSonPuzzle.cs owns progression, UI and gate motion.
 CastlePuzzleTarget.cs identifies interactable clues and torches.
 Materials and symbol meshes are unique to this group. The horse is built from
 simple carved-block shapes. Existing project stool/torch prefabs and TomMusic
-sound effects are reused. DistantKnocking.wav is an original synthesized effect.
+sound effects are reused. DistantKnocking.wav uses the included TomMusic Sword Blocked 1-3 impacts,
+pitched and arranged as soft iron-gate knocks with synthesized metallic ringing.
+The six-second mono clip leaves pauses between two groups of three knocks.
 No new packages or external downloads were added.
 
 VERIFICATION (2026-11-06)

@@ -11,6 +11,8 @@ public abstract class InteractablePickup : MonoBehaviour
     protected bool playerInRange;
     protected bool collected;
 
+    public bool IsCollected => collected;
+
     protected abstract string InteractionMessage { get; }
 
     protected virtual void Awake()

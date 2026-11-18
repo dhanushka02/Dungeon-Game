@@ -1,14 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class SceneEntrance : MonoBehaviour
 {
     [SerializeField] private GameObject interactionPrompt;
     [SerializeField] private string destinationScene = "CastleInterior";
+    [SerializeField] private bool loadOnEnter;
 
     private bool playerInRange;
-    private bool isLoading;
 
     private void Awake()
     {
@@ -18,17 +17,23 @@ public class SceneEntrance : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || isLoading || Keyboard.current == null)
+        if (!playerInRange || SceneTransitionFade.InProgress || Keyboard.current == null)
             return;
 
         if (Keyboard.current.eKey.wasPressedThisFrame)
-            EnterCastle();
+            EnterDestination();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!IsPlayer(other))
             return;
+
+        if (loadOnEnter)
+        {
+            EnterDestination();
+            return;
+        }
 
         playerInRange = true;
 
@@ -47,22 +52,10 @@ public class SceneEntrance : MonoBehaviour
             interactionPrompt.SetActive(false);
     }
 
-    private void EnterCastle()
+    private void EnterDestination()
     {
-        if (!Application.CanStreamedLevelBeLoaded(destinationScene))
-        {
-            Debug.LogError(
-                $"Scene '{destinationScene}' is not enabled in the Scene List."
-            );
-            return;
-        }
-
-        isLoading = true;
-
-        if (interactionPrompt != null)
+        if (SceneTransitionFade.TryLoad(destinationScene) && interactionPrompt != null)
             interactionPrompt.SetActive(false);
-
-        SceneManager.LoadScene(destinationScene);
     }
 
     private static bool IsPlayer(Collider other)
