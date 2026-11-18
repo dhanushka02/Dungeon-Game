@@ -48,12 +48,12 @@ public class ItemPickup : MonoBehaviour
                 }
             }
 
-            if (closestItem == this)
+            if (closestItem != null)
             {
-                bool added = InventoryManager.Instance.AddItem(item);
+                bool added = InventoryManager.Instance.AddItem(closestItem.item);
 
                 if (added)
-                    Destroy(gameObject);
+                    Destroy(closestItem.gameObject);
             }
         }
     }
