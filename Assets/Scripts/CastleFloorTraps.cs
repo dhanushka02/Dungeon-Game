@@ -35,7 +35,7 @@ public sealed class CastleFloorTraps : MonoBehaviour
 
     private void Update()
     {
-        bool inside = roomBounds.Contains(player.transform.position);
+        bool inside = roomBounds.Contains(transform.InverseTransformPoint(player.transform.position));
         if (!entered && inside)
         {
             entered = true;

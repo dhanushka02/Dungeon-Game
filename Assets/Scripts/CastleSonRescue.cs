@@ -61,7 +61,7 @@ public sealed class CastleSonRescue : MonoBehaviour
 
         bool use = Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame;
         bool escape = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
-        bool inside = roomBounds.Contains(player.transform.position);
+        bool inside = roomBounds.Contains(transform.InverseTransformPoint(player.transform.position));
         if (!entered && inside)
         {
             entered = true;
