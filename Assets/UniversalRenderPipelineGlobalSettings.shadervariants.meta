@@ -1,15 +1,8 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/UniversalRenderPipelineGlobalSettings.shadervariants.meta
-guid: 9171aa2efed01f14cb41d23eb65baae7
-NativeFormatImporter:
-  externalObjects: {}
-  mainObjectFileID: 20000000
-========
 guid: 67c73dd9c48c646bb978f8351fe82f0a
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 2100000
->>>>>>>> origin/Village:Assets/Medieval props/Materials/PileOfWoodV2_normal.mat.meta
   userData: 
   assetBundleName: 
   assetBundleVariant: 

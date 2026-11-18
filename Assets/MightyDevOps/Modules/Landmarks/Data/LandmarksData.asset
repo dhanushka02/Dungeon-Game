@@ -19,4 +19,6 @@ MonoBehaviour:
       distanceStart: 5
       distanceEnd: 100
       show: 1
-  scenes: []
+  scenes:
+  - name: mighty_island___Assets_MightyDevOps_Scenes_mighty_island
+    landmarks: []

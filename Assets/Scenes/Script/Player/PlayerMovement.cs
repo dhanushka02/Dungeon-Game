@@ -1,10 +1,11 @@
+
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
     public Transform cameraTransform;
-    public Animator animator;
+    public PlayerAnimation playerAnimation;
 
     public float normalSpeed = 3f;
     public float sprintSpeed = 6f;
@@ -12,12 +13,24 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -20f;
 
     private float verticalVelocity;
+    private bool isJumping;
 
-    private int combo = 0;
-    private float lastAttackTime = 0f;
+    void Awake()
+    {
+        if (controller == null)
+            controller = GetComponent<CharacterController>();
+
+        if (cameraTransform == null && Camera.main != null)
+            cameraTransform = Camera.main.transform;
+
+        playerAnimation = GetComponent<PlayerAnimation>();
+    }
 
     void Update()
     {
+        if (controller == null || cameraTransform == null)
+            return;
+
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -30,46 +43,27 @@ public class PlayerMovement : MonoBehaviour
         forward.Normalize();
         right.Normalize();
 
-        Vector3 move = forward * z + right * x;
-        move = move.normalized;
+        Vector3 move = (forward * z + right * x).normalized;
 
         bool running = Input.GetKey(KeyCode.LeftShift);
-
-        float currentSpeed = normalSpeed;
-
-        if (running)
-        {
-            currentSpeed = sprintSpeed;
-        }
+        float currentSpeed = running ? sprintSpeed : normalSpeed;
 
         if (move != Vector3.zero)
-        {
             transform.forward = move;
-        }
 
-        if (controller.isGrounded && verticalVelocity < 0)
+        if (controller.isGrounded && verticalVelocity < 0f)
         {
             verticalVelocity = -2f;
+            isJumping = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded)
         {
-            verticalVelocity = Mathf.Sqrt(
-                jumpHeight * -2f * gravity
-            );
+            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            isJumping = true;
 
-            animator.SetTrigger("Jump");
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            Attack();
-        }
-
-        if (Time.time - lastAttackTime > 1.5f)
-        {
-            combo = 0;
-            animator.SetInteger("Combo", 0);
+            if (playerAnimation != null)
+                playerAnimation.PlayAction(PlayerAnimation.jumpAnimation, 0.6f);
         }
 
         verticalVelocity += gravity * Time.deltaTime;
@@ -79,32 +73,24 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(movement * Time.deltaTime);
 
-        animator.SetFloat("Speed", move.magnitude);
-        animator.SetBool("Running", running);
-        animator.SetFloat("YVelocity", verticalVelocity);
-    }
+        if (playerAnimation == null || playerAnimation.IsLocked())
+            return;
 
-    void Attack()
-    {
-        if (Time.time - lastAttackTime > 1.5f)
+        if (isJumping && !controller.isGrounded)
         {
-            combo = 0;
+            playerAnimation.ChangeAnimation(PlayerAnimation.jumpAnimation);
         }
-
-        combo++;
-
-        if (combo > 3)
+        else if (move == Vector3.zero)
         {
-            combo = 1;
+            playerAnimation.ChangeAnimation(PlayerAnimation.idleAnimation);
         }
-
-        animator.SetInteger("Combo", combo);
-
-        if (combo == 1)
+        else if (running)
         {
-            animator.SetTrigger("Attack");
+            playerAnimation.ChangeAnimation(PlayerAnimation.sprintAnimation);
         }
-
-        lastAttackTime = Time.time;
+        else
+        {
+            playerAnimation.ChangeAnimation(PlayerAnimation.walkAnimation);
+        }
     }
 }
