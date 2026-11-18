@@ -39,6 +39,9 @@ public class InventoryUI : MonoBehaviour
                 equipmentHUD.SetActive(!isOpen);
             }
 
+            Cursor.visible = isOpen;
+            Cursor.lockState = isOpen ? CursorLockMode.None : CursorLockMode.Locked;
+
             if (isOpen)
             {
                 RefreshInventory();
