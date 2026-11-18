@@ -24675,18 +24675,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f0ef0f3680e784fbaf8622d599faae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  playerAnimation: {fileID: 0}
-  playerHealth: {fileID: 0}
-  attackPoint: {fileID: 0}
-  enemyLayer:
-    m_Bits: 8
-  attackRange: 1
-  attackDamage: 20
-  attackCooldown: 1
-  damageDelay: 0.5
-  comboResetTime: 1.5
-  lastAttackTime: -10
-  combo: 0
 --- !u!114 &317352472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31574,31 +31562,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6679017069556005625, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1116.536
+      value: -793.19147
       objectReference: {fileID: 0}
     - target: {fileID: 6679017069556005625, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 33.012
+      value: 36.20153
       objectReference: {fileID: 0}
     - target: {fileID: 6679017069556005625, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 50.231
+      value: 14.417038
       objectReference: {fileID: 0}
     - target: {fileID: 6679017069556005625, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.72476226
+      value: -0.4740545
       objectReference: {fileID: 0}
     - target: {fileID: 6679017069556005625, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.03241337
+      value: -0.0073814215
       objectReference: {fileID: 0}
     - target: {fileID: 6679017069556005625, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.68803775
+      value: -0.8802929
       objectReference: {fileID: 0}
     - target: {fileID: 6679017069556005625, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.016525289
+      value: 0.01738796
       objectReference: {fileID: 0}
     - target: {fileID: 6679017069556005625, guid: 435d261c1fe73ba46883b819e578219d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -61037,18 +61025,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f0ef0f3680e784fbaf8622d599faae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  playerAnimation: {fileID: 0}
-  playerHealth: {fileID: 0}
-  attackPoint: {fileID: 0}
-  enemyLayer:
-    m_Bits: 8
-  attackRange: 1
-  attackDamage: 20
-  attackCooldown: 1
-  damageDelay: 0.5
-  comboResetTime: 1.5
-  lastAttackTime: -10
-  combo: 0
 --- !u!4 &648216619
 Transform:
   m_ObjectHideFlags: 0
@@ -241265,6 +241241,128 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5279846457461932001, guid: 7e2b134344aa7c0449b99d1a47be113a, type: 3}
   m_PrefabInstance: {fileID: 761068184}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1918112600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1918112603}
+  - component: {fileID: 1918112602}
+  - component: {fileID: 1918112601}
+  m_Layer: 0
+  m_Name: Upper landing - enter HouseByDino
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1918112601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918112600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466e236c12a494e4aa206aebe79458bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneEntrance
+  interactionPrompt: {fileID: 0}
+  destinationScene: HouseByDino
+  loadOnEnter: 1
+--- !u!65 &1918112602
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918112600}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.88, y: 0.96, z: 0.42}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1918112603
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918112600}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.24, z: -1.22}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 596576458}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1918112620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1918112623}
+  - component: {fileID: 1918112622}
+  m_Layer: 0
+  m_Name: Boss room stairs - walk surface
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1918112622
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918112620}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.47, y: 0.16, z: 3.238055}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1918112623
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918112620}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.3398675, y: 0, z: 0, w: 0.9404733}
+  m_LocalPosition: {x: 650.9123, y: -33.62652, z: 17.821722}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1284596984}
+  m_LocalEulerAnglesHint: {x: 39.7376, y: 0, z: 0}
 --- !u!1001 &1920727252
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -278333,128 +278431,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ad80da37dcf6d4e2ab58d6fb3f57dfa1, type: 3}
   m_PrefabInstance: {fileID: 2146066197}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1918112600
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1918112603}
-  - component: {fileID: 1918112602}
-  - component: {fileID: 1918112601}
-  m_Layer: 0
-  m_Name: Upper landing - enter HouseByDino
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1918112601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1918112600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 466e236c12a494e4aa206aebe79458bc, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::SceneEntrance
-  interactionPrompt: {fileID: 0}
-  destinationScene: HouseByDino
-  loadOnEnter: 1
---- !u!65 &1918112602
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1918112600}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.88, y: 0.96, z: 0.42}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!4 &1918112603
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1918112600}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.24, z: -1.22}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 596576458}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1918112620
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1918112623}
-  - component: {fileID: 1918112622}
-  m_Layer: 0
-  m_Name: Boss room stairs - walk surface
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!65 &1918112622
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1918112620}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.47, y: 0.16, z: 3.238055}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!4 &1918112623
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1918112620}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.33986751, y: 0, z: 0, w: 0.94047333}
-  m_LocalPosition: {x: 650.912320, y: -33.626518, z: 17.821722}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1284596984}
-  m_LocalEulerAnglesHint: {x: 39.73760, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
